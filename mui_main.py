@@ -59,3 +59,8 @@ class Mui():
     def draw_errors(self):
         if self.errors > 0:
             print(self.errors)
+
+
+m = Mui()
+m.draw_list()
+m.draw_confirmation()
