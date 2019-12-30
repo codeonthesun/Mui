@@ -6,23 +6,22 @@ import shutil
 class Mui():
     def __init__(self):
         self.files = [f for f in glob.glob('*')]
-        self.file_extensions = [os.path.splitext(val)[1] for val in self.files]
+        self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
         self.path = os.getcwd()
-        self.errors = 0
+        self.errors = []
 
     def draw_list(self):
         print(f"Files in directory: {self.files}")
         self.user_choice = input(
             'Are you sure you want to organize this directory?[Y/N]: ')
-        self.temp = self.user_choice.lower()
 
     def draw_confirmation(self):
-        while 'y' or 'n' not in self.temp:
-            if 'y' in self.temp:
+        while True:
+            if self.user_choice.lower().startswith('y'):
                 self.create_directory_for_extension()
-                print('Success')
+                print('Success.')
                 break
-            elif 'n' in self.temp:
+            elif self.user_choice.lower().startswith('n'):
                 print('Goodbye.')
                 break
             else:
@@ -30,25 +29,22 @@ class Mui():
 
     def create_directory_for_extension(self):
         for self.extension in self.file_extensions:
-            self.dir_name = self.extension
-            self.make_folder(self.dir_name)
+            self.make_folder()
             self.copy_file()
 
-    def make_folder(self, dir_name):
+    def make_folder(self):
         try:
-            os.mkdir(dir_name)
+            os.mkdir(self.extension)
         except OSError:
-            print(f'Creation of the directory {dir_name} failed')
-            self.errors += 1
+            print(f'Creation of the directory {self.extension} failed')
         else:
-            print(f'Successfully created the directory {self.path}')
+            print(f'Successfully created the directory {self.extension}')
 
     def copy_file(self):
         for file in self.files:
-            fname = file
-            if self.dir_name in fname:
+            if self.extension in file:
                 try:
-                    shutil.move(f'{fname}', f'{self.dir_name} //')
+                    shutil.move(file, self.extension)
                 except shutil.Error as e:
                     print(f'Error: {e}')
                 except IOError as e:
@@ -56,11 +52,8 @@ class Mui():
                 else:
                     print('Files moved.')
 
-    def draw_errors(self):
-        if self.errors > 0:
-            print(self.errors)
 
-
-m = Mui()
-m.draw_list()
-m.draw_confirmation()
+if __name__ == '__main__':
+    m = Mui()
+    m.draw_list()
+    m.draw_confirmation()
