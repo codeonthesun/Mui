@@ -10,6 +10,8 @@ class Mui():
         self.path = os.getcwd()
         self.errors = []
 
+    # TODO define error function
+        
     def draw_list(self):
         print(f"Files in directory: {self.files}")
         self.user_choice = input(
