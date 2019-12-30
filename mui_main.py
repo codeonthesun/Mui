@@ -14,7 +14,7 @@ class Mui():
     def record_error(self, msg):
         self.errors.push(msg)
 
-    def draw_errors(self):
+    def draw_error(self):
         print(f'Error Count: {len(self.errors)}')
 
     def draw_files_in_dir(self):
@@ -37,7 +37,7 @@ class Mui():
                 print('Goodbye.')
                 break
             else:
-                print("[ Sorry, that's not an appropriate answer. Try again ]")
+                print(" Sorry, that's not an appropriate response. Try again")
 
     def create_directory_for_extension(self):
         for self.extension in self.file_extensions:
@@ -48,10 +48,10 @@ class Mui():
     def make_folder(self):
         try:
             os.mkdir(self.extension)
-        except OSError as err:
-            self.record_error(err)
+        except OSError as e:
+            self.record_error(e)
             print(
-                f'Creation of the directory {self.extension} failed. {err}')
+                f'Creation of the directory {self.extension} failed. {e}')
         else:
             print(f'Successfully created the directory {self.extension}')
 
@@ -74,4 +74,4 @@ if __name__ == '__main__':
     m = Mui()
     m.draw_files_in_dir()
     m.draw_confirmation()
-    m.draw_errors()
+    m.draw_error()
