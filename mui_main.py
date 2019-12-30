@@ -14,7 +14,7 @@ class Mui():
     def record_error(self, msg):
         self.errors.push(msg)
 
-    def draw_error(self):
+    def draw_errors(self):
         print(f'Error Count: {len(self.errors)}')
 
     def draw_files_in_dir(self):
