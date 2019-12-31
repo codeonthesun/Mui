@@ -10,6 +10,7 @@ class Mui():
         self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
         self.path = os.getcwd()
         self.errors = []
+        self.menu_state = False  # Default menu state for user.
 
     def record_error(self, msg):
         self.errors.append(msg)
@@ -56,14 +57,29 @@ class Mui():
             elif self.user_choice.startswith('n'):
                 print(' Goodbye!')
                 break
-            elif self.user_choice == 'menu':
-                pass
-                # draw_help_menu()
+            elif 'menu' in self.user_choice:
+                self.menu_state = True
+                self.draw_help_menu()
+                break
             else:
                 print(" Sorry, that's not an appropriate response. Try again.")
 
+    def draw_main_loop(self):
+        """
+        Initialize main loop combining 'draw_files_in_dir' & 'draw_confirmation'
+        """
+        self.draw_files_in_dir()
+        self.draw_confirmation()
+
     def draw_help_menu(self):
-        pass
+        print("""Help Menu!
+        Here is a list of commands:
+        'Close', 'About', 'Options'""")
+        while self.menu_state:
+            menu_choice = input().strip().lower()
+            if 'close' in menu_choice:  # Reset program loop
+                self.draw_main_loop()
+                break
 
     def create_directory_for_extension(self):
         """
@@ -110,6 +126,5 @@ if __name__ == '__main__':
     Initialize command-line interface
     """
     m = Mui()
-    m.draw_files_in_dir()
-    m.draw_confirmation()
+    m.draw_main_loop()
     m.draw_error()
