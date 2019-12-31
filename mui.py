@@ -8,7 +8,6 @@ class Mui():
     def __init__(self):
         self.files = [f for f in glob.glob('*')]
         self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
-        self.path = os.getcwd()
         self.errors = []
         self.menu_state = False  # Default menu state for user.
 
@@ -55,7 +54,7 @@ class Mui():
                 print(' Success.')
                 break
             elif self.user_choice.startswith('n'):
-                print(' Goodbye!')
+                print(' Good-bye!')
                 break
             elif 'menu' in self.user_choice:
                 self.menu_state = True
@@ -66,7 +65,7 @@ class Mui():
 
     def draw_main_loop(self):
         """
-        Initialize main loop combining 'draw_files_in_dir' & 'draw_confirmation'
+        Initialize main loop combining 'draw_files_in_dir' & 'draw_confirmation'.
         """
         self.draw_files_in_dir()
         self.draw_confirmation()
@@ -80,6 +79,10 @@ class Mui():
             if 'close' in menu_choice:  # Reset program loop
                 self.draw_main_loop()
                 break
+            elif 'about' in menu_choice:
+                pass
+            elif 'options' in menu_choice:
+                pass
 
     def create_directory_for_extension(self):
         """
