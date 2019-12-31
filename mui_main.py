@@ -106,6 +106,9 @@ class Mui():
 
 
 if __name__ == '__main__':
+    """
+    Initialize command-line interface
+    """
     m = Mui()
     m.draw_files_in_dir()
     m.draw_confirmation()
