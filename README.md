@@ -1,2 +1,3 @@
-# mui
-a little program to organize files in folder, and to solidify some concepts 
+# Mui
+
+a little program to organize files in folder, and to solidify some concepts
