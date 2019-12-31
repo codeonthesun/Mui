@@ -25,10 +25,10 @@ class Mui():
 
     def draw_files_in_dir(self):
         """
-        Output all files in current working directory/custom path to screen.
+        Output all files in current working directory/path to screen.
         """
-        print('''\n Folder Contents:
-        ''')
+        print(f'''\n { os.getcwd() }\ | (Folder Contents):
+         ''')
         for file in self.files:
             """
             Formatting to differentiate files from folders.
@@ -50,12 +50,12 @@ class Mui():
             ).strip().lower()
             print('\n')
             if self.user_choice.startswith('y'):
-                self.create_directory_for_extension()
-                print(' Success.')
+                self.create_directory_for_extension()  # Default organization method
+                print(' Success!')
                 break
             elif self.user_choice.startswith('n'):
                 print(' Good-bye!')
-                break
+                quit()
             elif 'menu' in self.user_choice:
                 self.menu_state = True
                 self.draw_help_menu()
@@ -75,13 +75,14 @@ class Mui():
         Here is a list of commands:
         'Close', 'About', 'Options'""")
         while self.menu_state:
-            menu_choice = input().strip().lower()
-            if 'close' in menu_choice:  # Reset program loop
+            self.user_choice = input().strip().lower()
+            if 'close' in self.user_choice:  # Reset program loop
+                os.system('cls' if os.name == 'nt' else 'clear')  # Return
                 self.draw_main_loop()
                 break
-            elif 'about' in menu_choice:
+            elif 'about' in self.user_choice:
                 pass
-            elif 'options' in menu_choice:
+            elif 'options' in self.user_choice:
                 pass
 
     def create_directory_for_extension(self):
@@ -95,6 +96,10 @@ class Mui():
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
+        self.user_choice = input(
+            ' (Press [enter] key to close this window.) ')  # Prompt user for manual exit.
+        if self.user_choice:
+            exit()
 
     def make_folder(self):
         try:
