@@ -9,6 +9,7 @@ class Mui():
         self.files = [f for f in glob.glob('*')]
         self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
         self.errors = []
+        os.path = __name__
         self.menu_state = False  # Default menu state for user.
 
     def record_error(self, msg):
@@ -27,7 +28,7 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f'''\n { os.getcwd() }\ | (Folder Contents):
+        print(f'''\n { os.getcwd() } | (Folder Contents):
          ''')
         for file in self.files:
             """
