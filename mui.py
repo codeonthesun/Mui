@@ -5,13 +5,16 @@ import time
 
 
 class Mui():
+
+    
     def __init__(self):
-        self.path = (os.path.dirname(os.path.realpath(__file__)))
-        self.files = [f for f in glob.glob(f"{self.path}/*")]
-        self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
+        self.path_to_script = (os.path.dirname(os.path.realpath(__file__)))
+        self.files = [f for f in glob.glob(f"{self.path_to_script}/*")]     
         self.errors = []
+        self.user_choice = ''.strip().lower()
         self.menu_state = False  # Default menu state for user.
-        
+
+
     def record_error(self, msg):
         self.errors.append(msg)
 
@@ -28,7 +31,7 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f'''\n { self.path } | (Folder Contents):
+        print(f'''\n { self.path_to_script } | (Directory Contents):
          ''')
         for file in self.files:
             """
@@ -47,8 +50,8 @@ class Mui():
         print(''' Enter "Menu" for Help ''')
         while True:
             self.user_choice = input(
-                'Are you sure you want to organize this directory? [Y/N]: '
-            ).strip().lower()
+                'Would you like to organize this directory into folders? [Y/N]: '
+            )
             print('\n')
             if self.user_choice.startswith('y'):
                 self.create_directory_for_extension()  # Default organization method
@@ -72,17 +75,24 @@ class Mui():
         self.draw_confirmation()
 
     def draw_help_menu(self):
-        print("""Help Menu!
+        print("""
+    (NOTE! Under main directory: "•" = File and "//" = Folder.)
+            """)
+        print("""Help Menu.
         Here is a list of commands:
         'Close', 'About', 'Options'""")
-        while self.menu_state:
-            self.user_choice = input().strip().lower()
+        while self.menu_state:   
+            self.user_choice = input('>')
             if 'close' in self.user_choice:  # Reset program loop
                 os.system('cls' if os.name == 'nt' else 'clear')  # Return
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print("""   -Small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type.""")
+                print("""   Mui!
+
+    A small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type. 
+    This means for each unique file extension type (e.g. .zip, .txt, .py, ect.) a folder will be created and appropriately matching files moved to said folder.
+    Simple, automated, and designed to run flawlessly across platforms. (Python required of course!)""")
             elif 'options' in self.user_choice:
                 pass
 
@@ -90,21 +100,23 @@ class Mui():
         """
         Organize folder contents by file extensions.
         """
+        self.file_extensions = {os.path.splitext(val)[1] for val in self.files}      
         for self.extension in self.file_extensions:
             if not self.extension:  # Prevent creation & copying of folders.
                 pass
             else:
+                self.path_destination = os.path.join(self.path_to_script, self.extension) # Define destination for files
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
         self.user_choice = input(
-            ' (Press [enter] key to close proceed.) ') 
+            ' (Press [enter] key to proceed.) ') 
         if self.user_choice:
             exit()
 
-    def make_folder(self):
+    def make_folder(self):     
         try:
-            os.mkdir(os.path.join(self.path, self.extension))
+            os.mkdir(self.path_destination)
         except OSError as e:
             self.record_error(e)
             print(
@@ -119,7 +131,7 @@ class Mui():
         for file in self.files:
             if self.extension in file:
                 try:
-                    shutil.move(file, f"{self.path}/{self.extension}")
+                    shutil.move(file, self.path_destination)
                 except shutil.Error as e:
                     self.record_error(e)
                     print(f'Error: {e}')
