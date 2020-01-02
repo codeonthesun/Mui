@@ -6,11 +6,12 @@ import time
 
 class Mui():
     def __init__(self):
-        self.files = [f for f in glob.glob('*')]
+        self.path = (os.path.dirname(os.path.realpath(__file__)))
+        self.files = [f for f in glob.glob(f"{self.path}/*")]
         self.file_extensions = {os.path.splitext(val)[1] for val in self.files}
         self.errors = []
         self.menu_state = False  # Default menu state for user.
-
+        
     def record_error(self, msg):
         self.errors.append(msg)
 
@@ -27,7 +28,7 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f'''\n { os.getcwd() } | (Folder Contents):
+        print(f'''\n { self.path } | (Folder Contents):
          ''')
         for file in self.files:
             """
@@ -81,7 +82,7 @@ class Mui():
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                pass
+                print("""   -Small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type.""")
             elif 'options' in self.user_choice:
                 pass
 
@@ -97,13 +98,13 @@ class Mui():
                 time.sleep(0.5)
                 self.copy_file()
         self.user_choice = input(
-            ' (Press [enter] key to close this window.) ')  # Prompt user for manual exit.
+            ' (Press [enter] key to close proceed.) ') 
         if self.user_choice:
             exit()
 
     def make_folder(self):
         try:
-            os.mkdir(self.extension)
+            os.mkdir(os.path.join(self.path, self.extension))
         except OSError as e:
             self.record_error(e)
             print(
@@ -118,7 +119,7 @@ class Mui():
         for file in self.files:
             if self.extension in file:
                 try:
-                    shutil.move(file, self.extension)
+                    shutil.move(file, f"{self.path}/{self.extension}")
                 except shutil.Error as e:
                     self.record_error(e)
                     print(f'Error: {e}')
