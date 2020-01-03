@@ -49,9 +49,7 @@ class Mui():
         print('_______________________')
         print(' Enter "Menu" for Help ')
         while True:
-            self.user_choice = input(
-                'Would you like to organize this directory into folders? [Y/N]: '
-            )
+            self.user_choice = input('Would you like to organize this directory into folders? [Y/N]: ')
             print('\n')
             if self.user_choice.startswith('y'):
                 self.create_directory_for_extension()  # Default organization method
@@ -111,8 +109,7 @@ class Mui():
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
-        self.user_choice = input(
-            ' (Press [enter] key to proceed.) ') 
+        self.user_choice = input(' (Press [enter] key to proceed.) ') 
         if self.user_choice:
             exit()
 
@@ -121,8 +118,7 @@ class Mui():
             os.mkdir(self.path_destination)
         except OSError as e:
             self.record_error(e)
-            print(
-                f'Creation of the directory: {self.extension} failed. {e}')
+            print(f'Creation of the directory: {self.extension} failed. {e}')
         else:
             print(f'Successfully created the directory: {self.extension}')
 
