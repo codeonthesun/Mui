@@ -10,20 +10,22 @@ class Mui():
     def __init__(self):
         self.path_to_script = (os.path.dirname(os.path.realpath(__file__)))
         self.files = [f for f in glob.glob(f"{self.path_to_script}/*")]     
-        self.errors = []
+        self.errors = {}
         self.user_choice = ''.strip().lower()
         self.menu_state = False  # Default menu state for user.
 
 
-    def record_error(self, msg):
-        self.errors.append(msg)
+    def record_error(self, msg, source):
+        self.errors[msg] = source
 
     def draw_error(self):
         """
         Output error count if any. Otherwise prompt no errors found.
         """
-        if len(self.errors) > 0:
+        if len(self.errors):
             print(f'Error Count: {len(self.errors)}')
+            for key,val in self.errors.items():
+                print(f'{key} : {val}')
         else:
             print("Wow! No errors, isn't that great?")
 
@@ -117,7 +119,7 @@ class Mui():
         try:
             os.mkdir(self.path_destination)
         except OSError as e:
-            self.record_error(e)
+            self.record_error(e, self.extension)
             print(f'Creation of the directory: {self.extension} failed. {e}')
         else:
             print(f'Successfully created the directory: {self.extension}')
@@ -131,10 +133,10 @@ class Mui():
                 try:
                     shutil.move(file, self.path_destination)
                 except shutil.Error as e:
-                    self.record_error(e)
+                    self.record_error(e, file)
                     print(f'Error: {e}')
                 except IOError as e:
-                    self.record_error(e)
+                    self.record_error(e, file)
                     print(f'Error: {e.strerror}')
                 else:
                     print('Files moved.')
@@ -147,3 +149,4 @@ if __name__ == '__main__':
     m = Mui()
     m.draw_main_loop()
     m.draw_error()
+    
