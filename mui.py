@@ -8,15 +8,18 @@ class Mui():
 
     def __init__(self):
         self.path_to_script = (os.path.dirname(os.path.realpath(__file__)))
-        self.files = [f for f in glob.glob('*')]
+        self.files = [f for f in glob.glob(self.path_to_script + '/*')]
         self.errors = {}
         self.menu_state = False  # Default menu state for user.
 
     def record_error(self, msg, source):
         self.errors[msg] = source
 
-    def user_input(self, prompt, newline=True):
-        self.user_choice = input(prompt + ': ').strip().lower()
+    def user_input(self, prompt=None, newline=False, enter_key=False):
+        if enter_key:
+            self.user_choice = input('(Press [enter] key to proceed.)')
+        else:
+            self.user_choice = input(prompt + ': ').strip().lower()
         if newline:
             print('\n')
         else:
@@ -58,8 +61,10 @@ class Mui():
             self.user_input(
                 'Would you like to organize this directory into folders? [Y/N]')
             if self.user_choice.startswith('y'):
+                self.user_input(enter_key=True)
                 self.create_directory_for_extension()  # Default organization method
                 print(' Success!')
+                self.user_input(enter_key=True)
                 break
             elif self.user_choice.startswith('n'):
                 print(' Good-bye!')
@@ -116,9 +121,6 @@ class Mui():
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
-        self.user_choice = input(' (Press [enter] key to proceed.) ')
-        if self.user_choice:
-            exit()
 
     def make_folder(self):
         try:
