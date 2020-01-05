@@ -6,17 +6,21 @@ import time
 
 class Mui():
 
-
     def __init__(self):
         self.path_to_script = (os.path.dirname(os.path.realpath(__file__)))
-        self.files = [f for f in glob.glob(f"{self.path_to_script}/*")]     
+        self.files = [f for f in glob.glob('*')]
         self.errors = {}
-        self.user_choice = ''.strip().lower()
         self.menu_state = False  # Default menu state for user.
-
 
     def record_error(self, msg, source):
         self.errors[msg] = source
+
+    def user_input(self, prompt, newline=True):
+        self.user_choice = input(prompt + ': ').strip().lower()
+        if newline:
+            print('\n')
+        else:
+            pass
 
     def draw_error(self):
         """
@@ -24,7 +28,7 @@ class Mui():
         """
         if len(self.errors):
             print(f'Error Count: {len(self.errors)}')
-            for key,val in self.errors.items():
+            for key, val in self.errors.items():
                 print(f'{key} : {val}')
         else:
             print("Wow! No errors, isn't that great?")
@@ -46,13 +50,13 @@ class Mui():
 
     def draw_confirmation(self):
         """
-        Continuously prompt response from user.
+        Continuously prompt response from user. 
         """
         print('_______________________')
         print(' Enter "Menu" for Help ')
         while True:
-            self.user_choice = input('Would you like to organize this directory into folders? [Y/N]: ')
-            print('\n')
+            self.user_input(
+                'Would you like to organize this directory into folders? [Y/N]')
             if self.user_choice.startswith('y'):
                 self.create_directory_for_extension()  # Default organization method
                 print(' Success!')
@@ -81,8 +85,8 @@ class Mui():
         print("""Help Menu.
         Here is a list of commands:
         'Close', 'About', 'Options'""")
-        while self.menu_state:   
-            self.user_choice = input('>')
+        while self.menu_state:
+            self.user_input('>')
             if 'close' in self.user_choice:  # Reset program loop
                 os.system('cls' if os.name == 'nt' else 'clear')  # Return
                 self.draw_main_loop()
@@ -102,20 +106,21 @@ class Mui():
         """
         Organize folder contents by file extensions.
         """
-        self.file_extensions = {os.path.splitext(val)[1] for val in self.files}      
+        self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
             if not self.extension:  # Prevent creation & copying of folders.
                 pass
             else:
-                self.path_destination = os.path.join(self.path_to_script, self.extension) # Define destination for files
+                self.path_destination = os.path.join(
+                    self.path_to_script, self.extension)  # Define destination for files
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
-        self.user_choice = input(' (Press [enter] key to proceed.) ') 
+        self.user_choice = input(' (Press [enter] key to proceed.) ')
         if self.user_choice:
             exit()
 
-    def make_folder(self):     
+    def make_folder(self):
         try:
             os.mkdir(self.path_destination)
         except OSError as e:
@@ -149,4 +154,3 @@ if __name__ == '__main__':
     m = Mui()
     m.draw_main_loop()
     m.draw_error()
-    
