@@ -45,7 +45,7 @@ class Mui():
             if path.isfile(file):
                 print(f'''  • {file}   ''')  # File
             elif path.isdir(file):
-                print(f'''  // {file}   ''')  # Folder
+                print(f'''  ○ {file}   ''')  # Folder
 
     def draw_confirmation(self):
         """
@@ -80,7 +80,7 @@ class Mui():
 
     def draw_help_menu(self):
         print("""
-    (NOTE! Under main directory: "•" = File and "//" = Folder.)
+    (NOTE! Under main directory: "•" = File and "○" = Folder.)
             """)
         print("""Help Menu.
         Here is a list of commands:
