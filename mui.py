@@ -65,7 +65,7 @@ class Mui():
                 self.create_directory_for_extension()  # Default organization method
                 count = len(self.files) - len(self.errors)
                 print(
-                    f' Success! {count}/{self.files} files moved.')
+                    f' Success! {count}/{len(self.files)} files moved.')
                 self.draw_user_input(enter_key=True)
                 break
             elif self.user_choice.startswith('n'):
