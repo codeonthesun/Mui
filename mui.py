@@ -43,9 +43,9 @@ class Mui():
             Formatting to differentiate files from folders.
             """
             if path.isfile(file):
-                print(f'''  • {file}   ''')  # File
+                print(f"""  • {file}   """)  # File
             elif path.isdir(file):
-                print(f'''  ○ {file}   ''')  # Folder
+                print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
         """
@@ -73,7 +73,7 @@ class Mui():
 
     def draw_main_loop(self):
         """
-        Initialize main loop combining 'draw_files_in_dir' & 'draw_confirmation'.
+        Initialize main loop combining "draw_files_in_dir" & "draw_confirmation".
         """
         self.draw_files_in_dir()
         self.draw_confirmation()
