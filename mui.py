@@ -118,14 +118,17 @@ class Mui():
                 self.copy_file()
 
     def make_folder(self):
-        try:
-            os.mkdir(self.path_destination)
-        except OSError as e:
-            self.record_error(e, self.extension)
-            print(f'Creation of the directory: {self.extension} failed. {e}')
+        if not os.path.exists(self.path_destination):
+            try:
+                os.mkdir(self.path_destination)
+            except OSError as e:
+                self.record_error(e, self.extension)
+                print(f'Creation of the directory: {self.extension} failed. {e}')
+            else:
+                print(f'Successfully created the directory: {self.extension}')
+                self.folders_created += 1
         else:
-            print(f'Successfully created the directory: {self.extension}')
-            self.folders_created += 1
+            print('Directory already exists.')
 
     def copy_file(self):
         """
