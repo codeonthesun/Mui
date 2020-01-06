@@ -7,8 +7,8 @@ import time
 class Mui():
 
     def __init__(self):
-        self.path_to_script = (os.path.dirname(os.path.realpath(__file__)))
-        self.files = [f for f in glob.glob(self.path_to_script + '/*')]
+        self.script_path = (os.path.dirname(os.path.realpath(__file__)))
+        self.files = [f for f in glob.glob(self.script_path + '/*')]
         self.errors = {}
         self.menu_state = False  # Default menu state for user.
 
@@ -36,7 +36,7 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f'''\n { self.path_to_script } | (Directory Contents):
+        print(f'''\n { self.script_path } | (Directory Contents):
          ''')
         for file in self.files:
             """
@@ -60,7 +60,6 @@ class Mui():
                 self.draw_user_input(enter_key=True)
                 self.create_directory_for_extension()
                 self.post_prompt()
-                self.draw_user_input(enter_key=True)
                 break
             elif self.user_choice.startswith('n'):
                 print(' Good-bye!')
@@ -112,7 +111,7 @@ class Mui():
         for self.extension in self.file_extensions:
             if self.extension:
                 self.path_destination = os.path.join(
-                    self.path_to_script, self.extension)  # Define destination for files
+                    self.script_path, self.extension)  # Define destination for files
                 self.make_folder()
                 time.sleep(0.5)
                 self.copy_file()
@@ -123,7 +122,8 @@ class Mui():
                 os.mkdir(self.path_destination)
             except OSError as e:
                 self.record_error(e, self.extension)
-                print(f'Creation of the directory: {self.extension} failed. {e}')
+                print(
+                    f'Creation of the directory: {self.extension} failed. {e}')
             else:
                 print(f'Successfully created the directory: {self.extension}')
                 self.folders_created += 1
@@ -149,19 +149,20 @@ class Mui():
                     self.files_copied += 1
 
     def post_prompt(self):
-        self.dir_count = 0
+        self.folder_count = 0
         for folder in self.files:
             if os.path.isdir(folder):
-                self.dir_count += 1
+                self.folder_count += 1
 
-        def count(x, is_file=False):
-            if is_file:
-                return (len(x) - self.dir_count) - len(self.errors)
+        def count(x, is_files=False):
+            if is_files:
+                return (len(x) - self.folder_count) - len(self.errors)
             else:
                 return (x - len(self.errors))
-        count(self.folders_created), count(self.files, is_file=True)
+        count(self.folders_created), count(self.files, is_files=True)
         print(
-            f' Success! {self.folders_created} folders created and {self.files_copied} files moved.')
+            f' Success! {self.folders_created} directories created and {self.files_copied} files moved.')
+        self.draw_user_input(enter_key=True)
 
 
 if __name__ == '__main__':
