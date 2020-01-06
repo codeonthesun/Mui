@@ -22,8 +22,6 @@ class Mui():
             self.user_choice = input(prompt + ': ').strip().lower()
         if newline:
             print('\n')
-        else:
-            pass
 
     def draw_error(self):
         """
@@ -108,15 +106,13 @@ class Mui():
                 pass
 
     def create_directory_for_extension(self):
-        self.folders_created, self.files_copied = 0, 0
         """
         Organize folder contents by file extensions.
         """
+        self.folders_created, self.files_copied = 0, 0
         self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
-            if not self.extension:  # Prevent creation & copying of folders.
-                pass
-            else:
+            if self.extension:
                 self.path_destination = os.path.join(
                     self.path_to_script, self.extension)  # Define destination for files
                 self.make_folder()
@@ -163,7 +159,8 @@ class Mui():
             else:
                 return (x - len(self.errors))
         count(self.folders_created), count(self.files, is_file=True)
-        print(f' Success! {self.folders_created} folders created and {self.files_copied} files moved.')
+        print(
+            f' Success! {self.folders_created} folders created and {self.files_copied} files moved.')
 
 
 if __name__ == '__main__':
