@@ -1,14 +1,14 @@
-import glob
-import os
-import shutil
-import time
+from glob import glob
+from os import path, mkdir, system, name
+from shutil import move, Error
+from time import sleep
 
 
 class Mui():
 
     def __init__(self):
-        self.script_path = (os.path.dirname(os.path.realpath(__file__)))
-        self.files = [f for f in glob.glob(self.script_path + '/*')]
+        self.script_path = (path.dirname(path.realpath(__file__)))
+        self.files = [f for f in glob(self.script_path + '/*')]
         self.errors = {}
         self.menu_state = False  # Default menu state for user.
 
@@ -42,9 +42,9 @@ class Mui():
             """
             Formatting to differentiate files from folders.
             """
-            if os.path.isfile(file):
+            if path.isfile(file):
                 print(f'''  • {file}   ''')  # File
-            elif os.path.isdir(file):
+            elif path.isdir(file):
                 print(f'''  // {file}   ''')  # Folder
 
     def draw_confirmation(self):
@@ -88,7 +88,7 @@ class Mui():
         while self.menu_state:
             self.draw_user_input('>')
             if 'close' in self.user_choice:  # Reset program loop
-                os.system('cls' if os.name == 'nt' else 'clear')  # Return
+                system('cls' if name == 'nt' else 'clear')  # Return
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
@@ -107,19 +107,19 @@ class Mui():
         Organize folder contents by file extensions.
         """
         self.folders_created, self.files_copied = 0, 0
-        self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
+        self.file_extensions = {path.splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
             if self.extension:
-                self.path_destination = os.path.join(
+                self.path_destination = path.join(
                     self.script_path, self.extension)  # Define destination for files
                 self.make_folder()
-                time.sleep(0.5)
+                sleep(0.5)
                 self.copy_file()
 
     def make_folder(self):
-        if not os.path.exists(self.path_destination):
+        if not path.exists(self.path_destination):
             try:
-                os.mkdir(self.path_destination)
+                mkdir(self.path_destination)
             except OSError as e:
                 self.record_error(e, self.extension)
                 print(
@@ -137,8 +137,8 @@ class Mui():
         for file in self.files:
             if self.extension in file:
                 try:
-                    shutil.move(file, self.path_destination)
-                except shutil.Error as e:
+                    move(file, self.path_destination)
+                except Error as e:
                     self.record_error(e, file)
                     print(f'Error: {e}')
                 except IOError as e:
@@ -151,7 +151,7 @@ class Mui():
     def post_prompt(self):
         self.folder_count = 0
         for folder in self.files:
-            if os.path.isdir(folder):
+            if path.isdir(folder):
                 self.folder_count += 1
 
         def count(x, is_files=False):
