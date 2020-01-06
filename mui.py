@@ -149,17 +149,8 @@ class Mui():
                     self.files_copied += 1
 
     def post_prompt(self):
-        self.folder_count = 0
-        for folder in self.files:
-            if path.isdir(folder):
-                self.folder_count += 1
-
-        def count(x, is_files=False):
-            if is_files:
-                return (len(x) - self.folder_count) - len(self.errors)
-            else:
-                return (x - len(self.errors))
-        count(self.folders_created), count(self.files, is_files=True)
+        def count(x): return (x - len(self.errors))
+        count(self.folders_created), count(self.files_copied)
         print(
             f' Success! {self.folders_created} directories created and {self.files_copied} files moved.')
         self.draw_user_input(enter_key=True)
