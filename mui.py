@@ -53,7 +53,7 @@ class Mui():
 
     def draw_confirmation(self):
         """
-        Continuously prompt response from user. 
+        Continuously prompt response from user.
         """
         print('_______________________')
         print(' Enter "Menu" for Help ')
@@ -63,9 +63,7 @@ class Mui():
             if self.user_choice.startswith('y'):
                 self.draw_user_input(enter_key=True)
                 self.create_directory_for_extension()  # Default organization method
-                count = len(self.files) - len(self.errors)
-                print(
-                    f' Success! {count}/{len(self.files)} files moved.')
+                self.post_prompt()
                 self.draw_user_input(enter_key=True)
                 break
             elif self.user_choice.startswith('n'):
@@ -99,9 +97,9 @@ class Mui():
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print('''   
+                print('''
         Mui:
-    A small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type. 
+    A small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type.
     This means for each unique file extension type (e.g. .zip, .txt, .py, ect.) a folder will be created and appropriately matching files moved to said folder.
     Simple, automated, and designed to run flawlessly across platforms. (Python required of course!)
     ''')
@@ -110,6 +108,7 @@ class Mui():
                 pass
 
     def create_directory_for_extension(self):
+        self.folders_created, self.files_copied = 0, 0
         """
         Organize folder contents by file extensions.
         """
@@ -132,6 +131,7 @@ class Mui():
             print(f'Creation of the directory: {self.extension} failed. {e}')
         else:
             print(f'Successfully created the directory: {self.extension}')
+            self.folders_created += 1
 
     def copy_file(self):
         """
@@ -149,6 +149,21 @@ class Mui():
                     print(f'Error: {e.strerror}')
                 else:
                     print('Files moved.')
+                    self.files_copied += 1
+
+    def post_prompt(self):
+        self.dir_count = 0
+        for folder in self.files:
+            if os.path.isdir(folder):
+                self.dir_count += 1
+
+        def count(x, is_file=False):
+            if is_file:
+                return (len(x) - self.dir_count) - len(self.errors)
+            else:
+                return (x - len(self.errors))
+        count(self.folders_created), count(self.files, is_file=True)
+        print(f' Success! {self.folders_created} folders created and {self.files_copied} files moved.')
 
 
 if __name__ == '__main__':
