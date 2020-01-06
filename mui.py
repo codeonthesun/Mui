@@ -15,13 +15,11 @@ class Mui():
     def record_error(self, msg, source):
         self.errors[msg] = source
 
-    def draw_user_input(self, prompt=None, newline=False, enter_key=False):
+    def draw_user_input(self, prompt=None, enter_key=False):
         if enter_key:
             self.user_choice = input('(Press [enter] key to proceed.)')
         else:
             self.user_choice = input(prompt + ': ').strip().lower()
-        if newline:
-            print('\n')
 
     def draw_error(self):
         """
@@ -57,10 +55,10 @@ class Mui():
         print(' Enter "Menu" for Help ')
         while True:
             self.draw_user_input(
-                'Would you like to organize this directory into folders? [Y/N]')
+                'Would you like to sort this directory into sub-folders? [Y/N]')
             if self.user_choice.startswith('y'):
                 self.draw_user_input(enter_key=True)
-                self.create_directory_for_extension()  # Default organization method
+                self.create_directory_for_extension()
                 self.post_prompt()
                 self.draw_user_input(enter_key=True)
                 break
