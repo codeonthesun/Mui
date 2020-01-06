@@ -36,8 +36,8 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f'''\n { self.script_path } | (Directory Contents):
-         ''')
+        print(f"""\n { self.script_path } | (Directory Contents):
+         """)
         for file in self.files:
             """
             Formatting to differentiate files from folders.
@@ -92,12 +92,12 @@ class Mui():
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print('''
+                print("""
         Mui:
     A small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type.
     This means for each unique file extension type (e.g. .zip, .txt, .py, ect.) a folder will be created and appropriately matching files moved to said folder.
     Simple, automated, and designed to run flawlessly across platforms. (Python required of course!)
-    ''')
+    """)
                 continue
             elif 'options' in self.user_choice:
                 pass
