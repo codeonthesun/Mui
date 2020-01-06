@@ -15,7 +15,7 @@ class Mui():
     def record_error(self, msg, source):
         self.errors[msg] = source
 
-    def user_input(self, prompt=None, newline=False, enter_key=False):
+    def draw_user_input(self, prompt=None, newline=False, enter_key=False):
         if enter_key:
             self.user_choice = input('(Press [enter] key to proceed.)')
         else:
@@ -58,13 +58,15 @@ class Mui():
         print('_______________________')
         print(' Enter "Menu" for Help ')
         while True:
-            self.user_input(
+            self.draw_user_input(
                 'Would you like to organize this directory into folders? [Y/N]')
             if self.user_choice.startswith('y'):
-                self.user_input(enter_key=True)
+                self.draw_user_input(enter_key=True)
                 self.create_directory_for_extension()  # Default organization method
-                print(' Success!')
-                self.user_input(enter_key=True)
+                count = len(self.files) - len(self.errors)
+                print(
+                    f' Success! {count}/{self.files} files moved.')
+                self.draw_user_input(enter_key=True)
                 break
             elif self.user_choice.startswith('n'):
                 print(' Good-bye!')
@@ -91,7 +93,7 @@ class Mui():
         Here is a list of commands:
         'Close', 'About', 'Options'""")
         while self.menu_state:
-            self.user_input('>')
+            self.draw_user_input('>')
             if 'close' in self.user_choice:  # Reset program loop
                 os.system('cls' if os.name == 'nt' else 'clear')  # Return
                 self.draw_main_loop()
