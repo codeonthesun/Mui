@@ -111,9 +111,10 @@ class Mui():
                     continue
 
     def optional_backup(self):
-        backup_path = path.join(self.script_path, 'backup')
-        timestamp = date.today()
+        backup_path, timestamp = path.join(
+            self.script_path, 'backup'), date.today()
         archive = f'{backup_path}_{str(timestamp)}'
+        print('Working')
         if not path.exists(backup_path):
             mkdir(backup_path)
         make_archive(base_name=archive, format='zip',
