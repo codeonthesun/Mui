@@ -37,8 +37,10 @@ class Mui():
         """
         Output all files in current working directory/path to screen.
         """
-        print(f"""\n { self.script_path } ⌂ (Directory Contents):
+        print(f"""\n { self.script_path } ⌂ Directory Contents:
          """)
+        print("""   (NOTE! Under main directory: "•" = File and "○" = Folder.)
+            """)
         for file in self.files:
             """
             Formatting to differentiate files from folders.
@@ -80,16 +82,15 @@ class Mui():
         self.draw_confirmation()
 
     def draw_help_menu(self):
-        print("""
-    (NOTE! Under main directory: "•" = File and "○" = Folder.)
-            """)
-        print("""Help Menu.
+        print('''
+                Help Menu.
         Here is a list of commands:
-        'Close', 'About', 'Options'""")
+            "About", "Options"''')
         while self.menu_state:
+            print('("Close" to return.)')
             self.draw_user_input('>')
-            if 'close' in self.user_choice:  # Reset program loop
-                system('cls' if name == 'nt' else 'clear')  # Return
+            if 'close' in self.user_choice:
+                system('cls' if name == 'nt' else 'clear')
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
@@ -101,9 +102,9 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                print(' Enter "x" to confirm or "close" to backout.')
+                print(' Enter "x" to confirm or [enter] to backout.')
                 self.draw_user_input(
-                    'Enable back up? (Warning: This could take a long time!) [ ]')
+                    '(WARNING: This could take a long time!) Enable back up []')
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
