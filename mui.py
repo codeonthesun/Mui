@@ -163,4 +163,3 @@ if __name__ == '__main__':
     """
     m = Mui()
     m.draw_main_loop()
-    
