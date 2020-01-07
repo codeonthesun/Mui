@@ -152,7 +152,7 @@ class Mui():
         def count(x): return (x - len(self.errors))
         count(self.folders_created), count(self.files_copied)
         print(
-            f' Success! {self.folders_created} directories created and {self.files_copied} files moved.')
+            f' Task Complete. {self.folders_created} directories created and {self.files_copied} files moved.')
         self.draw_error()
         self.draw_user_input(enter_key=True)
 
