@@ -18,7 +18,7 @@ class Mui():
 
     def draw_user_input(self, prompt=None, enter_key=False):
         if enter_key:
-            self.user_choice = input('(Press [enter] key to proceed.)')
+            self.user_choice = input('(Press [Enter] key to proceed.)')
         else:
             self.user_choice = input(prompt + ': ').strip().lower()
 
@@ -83,9 +83,10 @@ class Mui():
 
     def draw_help_menu(self):
         print('''
-                Help Menu.
-        Here is a list of commands:
-            "About", "Options"''')
+            Help Menu.
+    Here is a list of commands:
+        "About", "Options"
+            ''')
         while self.menu_state:
             print('("Close" to return.)')
             self.draw_user_input('>')
@@ -102,7 +103,7 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                print(' Enter "x" to confirm or [enter] to backout.')
+                print(' Enter "X" to confirm or [Enter] key to backout.')
                 self.draw_user_input(
                     '(WARNING: This could take a long time!) Enable back up []')
                 if 'x' in self.user_choice:
