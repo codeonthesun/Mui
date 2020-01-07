@@ -114,7 +114,8 @@ class Mui():
         archive = f'{backup_path}_{str(timestamp)}'
         if not path.exists(backup_path):
             mkdir(backup_path)
-        make_archive(base_name=archive, format='zip', root_dir=self.script_path)
+        make_archive(base_name=archive, format='zip',
+                     root_dir=self.script_path)
         move(archive + '.zip', backup_path + '/')
         print('Done.')
 
