@@ -1,7 +1,8 @@
 from glob import glob
 from os import path, mkdir, system, name
-from shutil import move, Error
+from shutil import move, make_archive, Error
 from time import sleep
+from datetime import date
 
 
 class Mui():
@@ -100,7 +101,22 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                pass
+                print(' Enter "x" to confirm or "close" to backout.')
+                self.draw_user_input(
+                    'Enable back up? (Warning: This could take a long time!) [ ]')
+                if 'x' in self.user_choice:
+                    self.optional_backup()
+                    continue
+
+    def optional_backup(self):
+        backup_path = path.join(self.script_path, 'backup')
+        timestamp = date.today()
+        archive = f'{backup_path}_{str(timestamp)}'
+        if not path.exists(backup_path):
+            mkdir(backup_path)
+        make_archive(base_name=archive, format='zip', root_dir=self.script_path)
+        move(archive + '.zip', backup_path + '/')
+        print('Done.')
 
     def create_directory_for_extension(self):
         """
