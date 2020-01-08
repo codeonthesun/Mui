@@ -51,6 +51,7 @@ class Mui():
                 print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
+
         """
         Continuously prompt response from user.
         """
@@ -87,8 +88,9 @@ class Mui():
     Here is a list of commands:
         "About", "Options"
             ''')
+        print('_______________________')
         while self.menu_state:
-            print('("Close" to return.)')
+            print('(Close to return.)')
             self.draw_user_input('>')
             if 'close' in self.user_choice:
                 system('cls' if name == 'nt' else 'clear')
@@ -103,7 +105,8 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                print(' Enter "X" to confirm choice or [Enter] key to backout.')
+                print(
+                    ' Enter "X" to confirm choice or [Enter] key to backout.')
                 self.draw_user_input(
                     'Backup current directory? (WARNING: This could take a long time!)')
                 if 'x' in self.user_choice:
@@ -130,9 +133,6 @@ class Mui():
         try:
             make_archive(base_name=archive, format='zip',
                          root_dir=self.script_path)
-        except Error as e:
-            self.record_error(e, archive)
-            print(f'Error: {e}')
         except Exception as e:
             self.record_error(e, archive)
             print(f'Error: {e}')
@@ -141,9 +141,6 @@ class Mui():
             sleep(0.5)
         try:
             move(archive + '.zip', backup_path + '/')
-        except Error as e:
-            self.record_error(e, archive + backup_path)
-            print(f'Error: {e}')
         except Exception as e:
             self.record_error(e, archive + backup_path)
             print(f'Error: {e}')
