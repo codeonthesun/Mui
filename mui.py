@@ -103,9 +103,9 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                print(' Enter "X" to confirm or [Enter] key to backout.')
+                print(' Enter "X" to confirm choice or [Enter] key to backout.')
                 self.draw_user_input(
-                    '(WARNING: This could take a long time!) Enable back up []')
+                    'Backup current directory? (WARNING: This could take a long time!)')
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
@@ -121,19 +121,21 @@ class Mui():
                 mkdir(backup_path)
             except OSError as e:
                 self.record_error(e, backup_path)
-                print(f'Creation of the directory: backup failed. {e}')
+                print(f'Creation of the directory: backup failed. {e}.')
             else:
                 print('Successfully created the directory: backup.')
                 sleep(0.5)
+        else:
+            print('Directory already exists.')
         try:
             make_archive(base_name=archive, format='zip',
                          root_dir=self.script_path)
         except Error as e:
             self.record_error(e, archive)
             print(f'Error: {e}')
-        except IOError as e:
+        except Exception as e:
             self.record_error(e, archive)
-            print(f'Error: {e.strerror}')
+            print(f'Error: {e}')
         else:
             print('Archive created.')
             sleep(0.5)
@@ -142,9 +144,9 @@ class Mui():
         except Error as e:
             self.record_error(e, archive + backup_path)
             print(f'Error: {e}')
-        except IOError as e:
+        except Exception as e:
             self.record_error(e, archive + backup_path)
-            print(f'Error: {e.strerror}')
+            print(f'Error: {e}')
         else:
             print('Done.')
 
