@@ -1,5 +1,6 @@
 from glob import glob
-from os import path, mkdir, system, name
+from os import mkdir, system, name
+from os.path import dirname, realpath, splitext, join, isfile, isdir, exists
 from shutil import move, make_archive, Error
 from time import sleep
 from datetime import date
@@ -8,7 +9,7 @@ from datetime import date
 class Mui():
 
     def __init__(self):
-        self.script_path = (path.dirname(path.realpath(__file__)))
+        self.script_path = (dirname(realpath(__file__)))
         self.files = [f for f in glob(self.script_path + '/*')]
         self.errors = {}
         self.menu_state = False  # Default menu state for user.
@@ -45,13 +46,12 @@ class Mui():
             """
             Formatting to differentiate files from folders.
             """
-            if path.isfile(file):
+            if isfile(file):
                 print(f"""  • {file}   """)  # File
-            elif path.isdir(file):
+            elif isdir(file):
                 print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
-
         """
         Continuously prompt response from user.
         """
@@ -114,12 +114,12 @@ class Mui():
                     continue
 
     def optional_backup(self):
-        backup_path, timestamp = path.join(
+        backup_path, timestamp = join(
             self.script_path, 'backup'), str(date.today())
         archive = f'{backup_path}_{timestamp}'
         print('Working.')
         sleep(0.5)
-        if not path.exists(backup_path):
+        if not exists(backup_path):
             try:
                 mkdir(backup_path)
             except OSError as e:
@@ -152,17 +152,17 @@ class Mui():
         Organize folder contents by file extensions.
         """
         self.folders_created, self.files_copied = 0, 0
-        self.file_extensions = {path.splitext(ext)[1] for ext in self.files}
+        self.file_extensions = {splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
             if self.extension:
-                self.path_destination = path.join(
+                self.path_destination = join(
                     self.script_path, self.extension)  # Define destination for files
                 self.make_folder()
                 sleep(0.5)
                 self.copy_file()
 
     def make_folder(self):
-        if not path.exists(self.path_destination):
+        if not exists(self.path_destination):
             try:
                 mkdir(self.path_destination)
             except OSError as e:
