@@ -112,15 +112,41 @@ class Mui():
 
     def optional_backup(self):
         backup_path, timestamp = path.join(
-            self.script_path, 'backup'), date.today()
-        archive = f'{backup_path}_{str(timestamp)}'
-        print('Working')
+            self.script_path, 'backup'), str(date.today())
+        archive = f'{backup_path}_{timestamp}'
+        print('Working.')
+        sleep(0.5)
         if not path.exists(backup_path):
-            mkdir(backup_path)
-        make_archive(base_name=archive, format='zip',
-                     root_dir=self.script_path)
-        move(archive + '.zip', backup_path + '/')
-        print('Done.')
+            try:
+                mkdir(backup_path)
+            except OSError as e:
+                self.record_error(e, backup_path)
+                print(f'Creation of the directory: backup failed. {e}')
+            else:
+                print('Successfully created the directory: backup.')
+                sleep(0.5)
+        try:
+            make_archive(base_name=archive, format='zip',
+                         root_dir=self.script_path)
+        except Error as e:
+            self.record_error(e, archive)
+            print(f'Error: {e}')
+        except IOError as e:
+            self.record_error(e, archive)
+            print(f'Error: {e.strerror}')
+        else:
+            print('Archive created.')
+            sleep(0.5)
+        try:
+            move(archive + '.zip', backup_path + '/')
+        except Error as e:
+            self.record_error(e, archive + backup_path)
+            print(f'Error: {e}')
+        except IOError as e:
+            self.record_error(e, archive + backup_path)
+            print(f'Error: {e.strerror}')
+        else:
+            print('Done.')
 
     def create_directory_for_extension(self):
         """
@@ -145,7 +171,7 @@ class Mui():
                 print(
                     f'Creation of the directory: {self.extension} failed. {e}')
             else:
-                print(f'Successfully created the directory: {self.extension}')
+                print(f'Successfully created the directory: {self.extension}.')
                 self.folders_created += 1
         else:
             print('Directory already exists.')
