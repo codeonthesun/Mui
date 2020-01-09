@@ -1,8 +1,8 @@
 from glob import glob
 from time import sleep
 from datetime import date
-from shutil import move, make_archive, Error
 from os import mkdir, system, name, path
+from shutil import move, make_archive, Error
 
 
 class Mui():
