@@ -13,12 +13,12 @@ class Mui():
         self.errors = {}
         self.menu_state = False  # Default menu state for user.
 
-    def record_error(self, msg, source):
-        self.errors[msg] = source
+    def record_error(self, msg, *sources):
+        self.errors[msg] = (sources)
 
     def draw_user_input(self, prompt=None, enter_key=False):
         if enter_key:
-            self.user_choice = input('(Press [Enter] key to proceed.)')
+            self.user_choice = input('(Press [Enter]-key to proceed.)')
         else:
             self.user_choice = input(prompt + ': ').strip().lower()
 
@@ -42,8 +42,8 @@ class Mui():
                 print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
-        print('_______________________')
-        print(' Enter "Menu" for Help ')
+        print('''_______________________''')
+        print(' Type "Menu" for Help.')
         while True:
             self.draw_user_input(
                 'Would you like to sort this directory into sub-folders? [Y/N]')
@@ -72,9 +72,8 @@ class Mui():
     Here is a list of commands:
         "About", "Options"
             ''')
-        print('_______________________')
         while self.menu_state:
-            print('(Close to return.)')
+            print(' Type "Close" to return.')
             self.draw_user_input('>')
             if 'close' in self.user_choice:
                 system('cls' if name == 'nt' else 'clear')
@@ -89,10 +88,10 @@ class Mui():
     """)
                 continue
             elif 'options' in self.user_choice:
-                print(
-                    ' Enter "X" to confirm choice or [Enter] key to backout.')
+                print(' (WARNING: This could take a long time!)')
                 self.draw_user_input(
-                    'Backup current directory? (WARNING: This could take a long time!)')
+                    '''Backup current directory? Type "X" to confirm or [Enter]-key to backout''')
+
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
