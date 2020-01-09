@@ -10,11 +10,12 @@ class Mui():
     def __init__(self):
         self.script_path = (path.dirname(path.realpath(__file__)))
         self.files = [f for f in glob(self.script_path + '/*')]
-        self.errors = {}
+        self.errors = []
         self.menu_state = False  # Default menu state for user.
 
-    def record_error(self, msg, *sources):
-        self.errors[msg] = (sources)
+    def record_error(self, msg):
+        self.errors.append(msg)
+        self.error_count = len(self.errors)
 
     def draw_user_input(self, prompt=None, enter_key=False):
         if enter_key:
@@ -23,10 +24,8 @@ class Mui():
             self.user_choice = input(prompt + ': ').strip().lower()
 
     def draw_error(self):
-        if len(self.errors):
-            print(f'Error Count: {len(self.errors)}')
-            for key, val in self.errors.items():
-                print(f'{key} : {val}')
+        if self.errors:
+            print(f'Error Count: {self.error_count}')
         else:
             print("Wow! No errors, isn't that great?")
 
@@ -42,7 +41,7 @@ class Mui():
                 print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
-        print('''_______________________''')
+        print('_______________________')
         print(' Type "Menu" for Help.')
         while True:
             self.draw_user_input(
@@ -90,7 +89,7 @@ class Mui():
             elif 'options' in self.user_choice:
                 print(' (WARNING: This could take a long time!)')
                 self.draw_user_input(
-                    '''Backup current directory? Type "X" to confirm or [Enter]-key to backout''')
+                    """Backup current directory? Type "X" to confirm or [Enter]-key to backout""")
 
                 if 'x' in self.user_choice:
                     self.optional_backup()
@@ -106,7 +105,7 @@ class Mui():
             try:
                 mkdir(backup_path)
             except OSError as e:
-                self.record_error(e, backup_path)
+                self.record_error(e)
                 print(f'Creation of the directory: backup failed. {e}.')
             else:
                 print('Successfully created the directory: backup.')
@@ -117,7 +116,7 @@ class Mui():
             make_archive(base_name=archive, format='zip',
                          root_dir=self.script_path)
         except Exception as e:
-            self.record_error(e, archive)
+            self.record_error(e)
             print(f'Error: {e}')
         else:
             print('Archive created.')
@@ -125,7 +124,7 @@ class Mui():
         try:
             move(archive + '.zip', backup_path + '/')
         except Exception as e:
-            self.record_error(e, archive + backup_path)
+            self.record_error(e)
             print(f'Error: {e}')
         else:
             print('Done.')
@@ -146,7 +145,7 @@ class Mui():
             try:
                 mkdir(self.path_destination)
             except OSError as e:
-                self.record_error(e, self.extension)
+                self.record_error(e)
                 print(
                     f'Creation of the directory: {self.extension} failed. {e}')
             else:
@@ -161,18 +160,18 @@ class Mui():
                 try:
                     move(file, self.path_destination)
                 except Error as e:
-                    self.record_error(e, file)
+                    self.record_error(e)
                     print(f'Error: {e}')
                 except IOError as e:
-                    self.record_error(e, file)
+                    self.record_error(e)
                     print(f'Error: {e.strerror}')
                 else:
                     print('Files moved.')
                     self.files_copied += 1
 
     def post_prompt(self):
-        def count(x): return (x - len(self.errors))
-        count(self.folders_created), count(self.files_copied)
+        def update_count(x): return (x - self.error_count)
+        update_count(self.folders_created), update_count(self.files_copied)
         print(
             f' Task Complete. {self.folders_created} directories created and {self.files_copied} files moved.')
         self.draw_error()
