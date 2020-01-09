@@ -30,7 +30,8 @@ class Mui():
             print("Wow! No errors, isn't that great?")
 
     def draw_files_in_dir(self):
-        print(f"""\n { self.script_path } ⌂ Directory Contents:
+        print(f"""
+{ self.script_path } ⌂ Directory Contents:
          """)
         print("""   (NOTE! Under main directory: "•" = File and "○" = Folder.)
             """)
@@ -105,7 +106,6 @@ class Mui():
             try:
                 mkdir(backup_path)
             except OSError as e:
-                self.record_error(e)
                 print(f'Creation of the directory: backup failed. {e}.')
             else:
                 print('Successfully created the directory: backup.')
@@ -116,7 +116,6 @@ class Mui():
             make_archive(base_name=archive, format='zip',
                          root_dir=self.script_path)
         except Exception as e:
-            self.record_error(e)
             print(f'Error: {e}')
         else:
             print('Archive created.')
@@ -124,7 +123,6 @@ class Mui():
         try:
             move(archive + '.zip', backup_path + '/')
         except Exception as e:
-            self.record_error(e)
             print(f'Error: {e}')
         else:
             print('Done.')
