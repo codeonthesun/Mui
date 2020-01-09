@@ -1,9 +1,9 @@
 from glob import glob
-from os import mkdir, system, name
-from os.path import dirname, realpath, splitext, join, isfile, isdir, exists
-from shutil import move, make_archive, Error
 from time import sleep
 from datetime import date
+from shutil import move, make_archive, Error
+from os import mkdir, system, name
+from os.path import dirname, realpath, splitext, join, isfile, isdir, exists
 
 
 class Mui():
@@ -24,9 +24,6 @@ class Mui():
             self.user_choice = input(prompt + ': ').strip().lower()
 
     def draw_error(self):
-        """
-        Output error count if any. Otherwise prompt no errors found.
-        """
         if len(self.errors):
             print(f'Error Count: {len(self.errors)}')
             for key, val in self.errors.items():
@@ -35,26 +32,17 @@ class Mui():
             print("Wow! No errors, isn't that great?")
 
     def draw_files_in_dir(self):
-        """
-        Output all files in current working directory/path to screen.
-        """
         print(f"""\n { self.script_path } ⌂ Directory Contents:
          """)
         print("""   (NOTE! Under main directory: "•" = File and "○" = Folder.)
             """)
         for file in self.files:
-            """
-            Formatting to differentiate files from folders.
-            """
             if isfile(file):
                 print(f"""  • {file}   """)  # File
             elif isdir(file):
                 print(f"""  ○ {file}   """)  # Folder
 
     def draw_confirmation(self):
-        """
-        Continuously prompt response from user.
-        """
         print('_______________________')
         print(' Enter "Menu" for Help ')
         while True:
@@ -76,9 +64,6 @@ class Mui():
                 print(" Sorry, that's not an appropriate response. Try again.")
 
     def draw_main_loop(self):
-        """
-        Initialize main loop combining "draw_files_in_dir" & "draw_confirmation".
-        """
         self.draw_files_in_dir()
         self.draw_confirmation()
 
@@ -148,9 +133,6 @@ class Mui():
             print('Done.')
 
     def create_directory_for_extension(self):
-        """
-        Organize folder contents by file extensions.
-        """
         self.folders_created, self.files_copied = 0, 0
         self.file_extensions = {splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
@@ -176,9 +158,6 @@ class Mui():
             print('Directory already exists.')
 
     def copy_file(self):
-        """
-        Move all files into matching directories created from 'make_folder'.
-        """
         for file in self.files:
             if self.extension in file:
                 try:
@@ -203,8 +182,5 @@ class Mui():
 
 
 if __name__ == '__main__':
-    """
-    Initialize command-line interface
-    """
     m = Mui()
     m.draw_main_loop()
