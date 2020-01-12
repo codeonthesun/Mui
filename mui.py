@@ -12,12 +12,11 @@ class Mui():
         self.script_path = (dirname(realpath(__file__)))
         self.files = [f for f in glob(self.script_path + '/*')]
         self.errors = []
-        self.menu_state = False  # Default menu state for user.
+        self.menu_state = False
 
     def record_error(self, msg):
         self.errors.append(msg)
 
-    @property
     def error_count(self):
         return len(self.errors)
 
@@ -44,7 +43,7 @@ class Mui():
                 print(f'  ○ {self.file}   ')  # Folder
 
     def draw_confirmation(self):
-        print('_______________________', 'Type "Menu" for Help.', sep='\n')
+        print('-' * 24, 'Type "Menu" for Help.', sep='\n')
         _ = ('Would you like to sort this directory into sub-folders? [Y/N]')
         while True:
             self.draw_user_input(_)
@@ -89,7 +88,7 @@ class Mui():
             elif 'backup' in self.user_choice:
                 print('\n', '(WARNING: This could take a long time!)')
                 self.draw_user_input(
-                    'Confirm with "X" or leave empty and hit [Enter]-key')
+                    'You MUST type "X" to confirm and hit [Enter]-key')
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
@@ -110,6 +109,7 @@ class Mui():
                 sleep(0.5)
         else:
             print('Directory already exists.')
+
         try:
             make_archive(base_name=archive, format='zip',
                          root_dir=self.script_path)
@@ -118,6 +118,7 @@ class Mui():
         else:
             print('Archive created.')
             sleep(0.5)
+
         try:
             move(archive + '.zip', _backup_path + '/')
         except Exception as e:
