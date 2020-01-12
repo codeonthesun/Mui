@@ -37,11 +37,11 @@ class Mui():
         _ = ('⌂ Directory Contents:',
              '(NOTE! Under main directory: "•" = File and "○" = Folder.)')
         print('\n', self.script_path, '\n'.join(_), '\n')
-        for file in self.files:
-            if isfile(file):
-                print(f'  • {file}   ')  # File
-            elif isdir(file):
-                print(f'  ○ {file}   ')  # Folder
+        for self.file in self.files:
+            if isfile(self.file):
+                print(f'  • {self.file}   ')  # File
+            elif isdir(self.file):
+                print(f'  ○ {self.file}   ')  # Folder
 
     def draw_confirmation(self):
         print('_______________________', 'Type "Menu" for Help.', sep='\n')
@@ -75,7 +75,7 @@ class Mui():
                 'a folder will be made & matching files moved to said folder.',
                 'Simple, automated, & built to run across platforms.',
                 '(Python required of course!)')
-        print('\n', '\n\t '.join(_men))
+        print('\n', '\n\t'.join(_men), '\n')
         while self.menu_state:
             print('Type "Close" to return to main.')
             self.draw_user_input('>')
@@ -84,12 +84,12 @@ class Mui():
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print('\n' + '\n '.join(_abt))
+                print('\n', '\n'.join(_abt), '\n')
                 continue
             elif 'backup' in self.user_choice:
-                print('(WARNING: This could take a long time!)')
+                print('\n', '(WARNING: This could take a long time!)')
                 self.draw_user_input(
-                    'Type "X" to confirm or [Enter]-key to backout')
+                    'Confirm with "X" or leave empty and hit [Enter]-key')
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
@@ -150,10 +150,10 @@ class Mui():
             print('Directory already exists.')
 
     def copy_file(self):
-        for file in self.files:
-            if self.extension in file:
+        for self.file in self.files:
+            if self.extension in self.file:
                 try:
-                    move(file, self.path_destination)
+                    move(self.file, self.path_destination)
                 except Error as e:
                     self.record_error(e)
                     print(f'Error: {e}')
@@ -165,11 +165,7 @@ class Mui():
                     self.files_copied += 1
 
     def post_prompt(self):
-        _ = ('Task Complete.', 'directories created and', 'files moved.')
-
-        def _update_count(x):
-            return (x - self.error_count)
-        _update_count(self.folders_created), _update_count(self.files_copied)
+        _ = ('Task Complete:', 'directories created and', 'files moved.')
         print(
             f'{_[0]} {self.folders_created} {_[1]} {self.files_copied} {_[2]}')
         self.draw_error()
