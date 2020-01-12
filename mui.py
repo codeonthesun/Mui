@@ -1,21 +1,25 @@
-from glob import glob
-from time import sleep
 from datetime import date
-from os import mkdir, system, name, path
-from shutil import move, make_archive, Error
+from glob import glob
+from os import mkdir, name, system
+from os.path import dirname, exists, isdir, isfile, join, realpath, splitext
+from shutil import Error, make_archive, move
+from time import sleep
 
 
 class Mui():
 
     def __init__(self):
-        self.script_path = (path.dirname(path.realpath(__file__)))
+        self.script_path = (dirname(realpath(__file__)))
         self.files = [f for f in glob(self.script_path + '/*')]
         self.errors = []
         self.menu_state = False  # Default menu state for user.
 
     def record_error(self, msg):
         self.errors.append(msg)
-        self.error_count = len(self.errors)
+
+    @property
+    def error_count(self):
+        return len(self.errors)
 
     def draw_user_input(self, prompt=None, enter_key=False):
         if enter_key:
@@ -25,86 +29,81 @@ class Mui():
 
     def draw_error(self):
         if self.errors:
-            print(f'Error Count: {self.error_count}')
+            print('Error Count: {}'.format(self.error_count))
         else:
             print("Wow! No errors, isn't that great?")
 
     def draw_files_in_dir(self):
-        print(f"""
-{ self.script_path } ⌂ Directory Contents:
-         """)
-        print("""   (NOTE! Under main directory: "•" = File and "○" = Folder.)
-            """)
+        _ = ('⌂ Directory Contents:',
+             '(NOTE! Under main directory: "•" = File and "○" = Folder.)')
+        print('\n {} {} \n'.format(self.script_path, '\n '.join(_[0:])))
         for file in self.files:
-            if path.isfile(file):
-                print(f"""  • {file}   """)  # File
-            elif path.isdir(file):
-                print(f"""  ○ {file}   """)  # Folder
+            if isfile(file):
+                print(f'  • {file}   ')  # File
+            elif isdir(file):
+                print(f'  ○ {file}   ')  # Folder
 
     def draw_confirmation(self):
-        print('_______________________')
-        print(' Type "Menu" for Help.')
+        _ = ('_______________________', 'Type "Menu" for Help.',
+             'Would you like to sort this directory into sub-folders? [Y/N]')
+        print('\n '.join(_[0:2]))
         while True:
-            self.draw_user_input(
-                'Would you like to sort this directory into sub-folders? [Y/N]')
+            self.draw_user_input(_[2])
             if self.user_choice.startswith('y'):
-                self.draw_user_input(enter_key=True)
                 self.create_directory_for_extension()
                 self.post_prompt()
                 break
             elif self.user_choice.startswith('n'):
-                print(' Good-bye!')
+                print('Good-bye!')
                 quit()
             elif 'menu' in self.user_choice:
                 self.menu_state = True
                 self.draw_help_menu()
                 break
             else:
-                print(" Sorry, that's not an appropriate response. Try again.")
+                print('Sorry, not an appropriate response. Try again.')
 
     def draw_main_loop(self):
         self.draw_files_in_dir()
         self.draw_confirmation()
 
     def draw_help_menu(self):
-        print('''
-            Help Menu.
-    Here is a list of commands:
-        "About", "Options"
-            ''')
+        _men = ('Help Menu:', 'List of commands:', '"About", "Backup"')
+        _abt = ('Mui:',
+                'A small tool to aid file organization, written in Python3.',
+                'Default method is set to consolidate via file extension.',
+                'This means for each unique file extension (e.g. .zip, ect.)',
+                'a folder will be made & matching files moved to said folder.',
+                'Simple, automated, & built to run across platforms.',
+                '(Python required of course!)')
+        print('\n' + '\n\t '.join(_men[0:]))
         while self.menu_state:
-            print(' Type "Close" to return.')
+            print('Type "Close" to return to main.')
             self.draw_user_input('>')
             if 'close' in self.user_choice:
                 system('cls' if name == 'nt' else 'clear')
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print("""
-        Mui:
-    A small tool to aid in file organization, written in Python 3. Default method of organizing is set to consolidate via file extension type.
-    This means for each unique file extension type (e.g. .zip, .txt, .py, ect.) a folder will be created and appropriately matching files moved to said folder.
-    Simple, automated, and designed to run flawlessly across platforms. (Python required of course!)
-    """)
+                print('\n' + '\n '.join(_abt[0:]))
                 continue
-            elif 'options' in self.user_choice:
-                print(' (WARNING: This could take a long time!)')
+            elif 'backup' in self.user_choice:
+                print('(WARNING: This could take a long time!)')
                 self.draw_user_input(
-                    """Backup current directory? Type "X" to confirm or [Enter]-key to backout""")
-
+                    'Type "X" to confirm or [Enter]-key to backout')
                 if 'x' in self.user_choice:
                     self.optional_backup()
                     continue
 
     def optional_backup(self):
-        backup_path, timestamp = path.join(
+        _backup_path, _timestamp = join(
             self.script_path, 'backup'), str(date.today())
-        archive = f'{backup_path}_{timestamp}'
+        archive = f'{_backup_path}_{_timestamp}'
         print('Working.')
         sleep(0.5)
-        if not path.exists(backup_path):
+        if not exists(_backup_path):
             try:
-                mkdir(backup_path)
+                mkdir(_backup_path)
             except OSError as e:
                 print(f'Creation of the directory: backup failed. {e}.')
             else:
@@ -121,7 +120,7 @@ class Mui():
             print('Archive created.')
             sleep(0.5)
         try:
-            move(archive + '.zip', backup_path + '/')
+            move(archive + '.zip', _backup_path + '/')
         except Exception as e:
             print(f'Error: {e}')
         else:
@@ -129,17 +128,16 @@ class Mui():
 
     def create_directory_for_extension(self):
         self.folders_created, self.files_copied = 0, 0
-        self.file_extensions = {path.splitext(ext)[1] for ext in self.files}
+        self.file_extensions = {splitext(ext)[1] for ext in self.files}
         for self.extension in self.file_extensions:
             if self.extension:
-                self.path_destination = path.join(
-                    self.script_path, self.extension)  # Define destination for files
+                self.path_destination = join(self.script_path, self.extension)
                 self.make_folder()
                 sleep(0.5)
                 self.copy_file()
 
     def make_folder(self):
-        if not path.exists(self.path_destination):
+        if not exists(self.path_destination):
             try:
                 mkdir(self.path_destination)
             except OSError as e:
@@ -168,10 +166,13 @@ class Mui():
                     self.files_copied += 1
 
     def post_prompt(self):
-        def update_count(x): return (x - self.error_count)
-        update_count(self.folders_created), update_count(self.files_copied)
+        _ = ('Task Complete.', 'directories created and', 'files moved.')
+
+        def _update_count(x):
+            return (x - self.error_count)
+        _update_count(self.folders_created), _update_count(self.files_copied)
         print(
-            f' Task Complete. {self.folders_created} directories created and {self.files_copied} files moved.')
+            f'{_[0]} {self.folders_created} {_[1]} {self.files_copied} {_[2]}')
         self.draw_error()
         self.draw_user_input(enter_key=True)
 
