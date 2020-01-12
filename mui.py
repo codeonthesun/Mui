@@ -36,7 +36,7 @@ class Mui():
     def draw_files_in_dir(self):
         _ = ('⌂ Directory Contents:',
              '(NOTE! Under main directory: "•" = File and "○" = Folder.)')
-        print('\n {} {} \n'.format(self.script_path, '\n '.join(_[:])))
+        print('\n', self.script_path, '\n'.join(_), '\n')
         for file in self.files:
             if isfile(file):
                 print(f'  • {file}   ')  # File
@@ -44,11 +44,10 @@ class Mui():
                 print(f'  ○ {file}   ')  # Folder
 
     def draw_confirmation(self):
-        _ = ('_______________________', 'Type "Menu" for Help.',
-             'Would you like to sort this directory into sub-folders? [Y/N]')
-        print('\n '.join(_[:2]))
+        print('_______________________', 'Type "Menu" for Help.', sep='\n')
+        _ = ('Would you like to sort this directory into sub-folders? [Y/N]')
         while True:
-            self.draw_user_input(_[2])
+            self.draw_user_input(_)
             if self.user_choice.startswith('y'):
                 self.create_directory_for_extension()
                 self.post_prompt()
@@ -76,7 +75,7 @@ class Mui():
                 'a folder will be made & matching files moved to said folder.',
                 'Simple, automated, & built to run across platforms.',
                 '(Python required of course!)')
-        print('\n' + '\n\t '.join(_men[:]))
+        print('\n', '\n\t '.join(_men))
         while self.menu_state:
             print('Type "Close" to return to main.')
             self.draw_user_input('>')
@@ -85,7 +84,7 @@ class Mui():
                 self.draw_main_loop()
                 break
             elif 'about' in self.user_choice:
-                print('\n' + '\n '.join(_abt[:]))
+                print('\n' + '\n '.join(_abt))
                 continue
             elif 'backup' in self.user_choice:
                 print('(WARNING: This could take a long time!)')
