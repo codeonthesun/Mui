@@ -1,7 +1,6 @@
+import os
 from datetime import date
 from glob import glob
-from os import mkdir, name, system
-from os.path import dirname, exists, isdir, isfile, join, realpath, splitext
 from shutil import Error, make_archive, move
 from time import sleep
 
@@ -9,36 +8,53 @@ from time import sleep
 class Mui():
 
     def __init__(self):
-        self.script_path = (dirname(realpath(__file__)))
+        self.script_path = (os.path.dirname(os.path.realpath(__file__)))
         self.files = [f for f in glob(self.script_path + '/*')]
-        self.file_extensions = {splitext(ext)[1] for ext in self.files}
+        self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
         self.errors = []
         self.menu_state = False
 
     def record_error(self, msg):
+        """
+        Simple error logger, only appends if a valid exception is thrown.
+        """
         self.errors.append(msg)
 
     def draw_user_input(self, prompt=None, enter_key=False):
+        """
+        User input and prompt.
+
+        enter_key=True, for when we only want shallow input (not to be saved.)
+        """
+
         if enter_key:
             self.user_choice = input('(Press [Enter]-key to proceed.)')
         else:
             self.user_choice = input(prompt + ': ').strip().lower()
 
     def draw_error(self):
+        """
+        Display error count if any, otherwise prompt user session was err free.
+        """
         if self.errors:
             print(f'Error Count: {len(self.errors)}')
         else:
             print("Wow! No errors, isn't that great?")
 
     def draw_files_in_dir(self):
+        """
+        Count files in current directory, starting from 1.
+
+        Displaying whether or not they are file or folder.
+        """
         directory = (
             '⌂ Directory Contents:',
             '(NOTE! Under main directory. "•" = File & "○" = Folder.)')
         for dir_count, self.file in enumerate(self.files, start=1):
-            if isfile(self.file):
-                print(f'  • {self.file}   ')  # File
-            elif isdir(self.file):
-                print(f'  ○ {self.file}   ')  # Folder
+            if os.path.isfile(self.file):
+                print(f'  • {self.file}   ')  # File differentiation
+            elif os.path.isdir(self.file):
+                print(f'  ○ {self.file}   ')  # Folder differentiation
         print('\n', self.script_path, '\n'.join(directory))
         print('In Directory:', dir_count)
 
@@ -64,6 +80,9 @@ class Mui():
                 print('Sorry, not an appropriate response. Try again.')
 
     def draw_help_menu(self):
+        """
+        Static help menu, with commands, about and optional "backup" feature.
+        """
         menu = ('Help Menu:', 'List of commands:', '"About", "Backup"')
         about = ('Mui:',
                  'A small tool to aid file organization, written in Python3.',
@@ -91,18 +110,28 @@ class Mui():
                     continue
 
     def create_directory_for_extension(self):
+        # Initialize count for successful operations.
         self.files_copied, self.folders_created = 0, 0
+        # Check each file for extension type.
         for self.extension in self.file_extensions:
+            # Verify value for file-extension to make sure not == to None
             if self.extension:
-                self.path_destination = join(self.script_path, self.extension)
+                self.path_destination = os.path.join(
+                    self.script_path, self.extension)  # Initialize path dest.
                 self.make_folder()
                 sleep(0.5)
                 self.copy_file()
 
     def make_folder(self):
-        if not exists(self.path_destination):
+        """
+        Make a new directory (folder) for each unique file-extension type.
+
+        Uses self.path_destination set from create_directory_for_extension.
+        """
+        # Make sure folder does not already exist before creating
+        if not os.path.exists(self.path_destination):
             try:
-                mkdir(self.path_destination)
+                os.mkdir(self.path_destination)
             except OSError as e:
                 self.record_error(e)
                 print(
@@ -114,7 +143,11 @@ class Mui():
             print('Directory already exists.')
 
     def copy_file(self):
+        """
+        Move all files into corresponding extension-type folder.
+        """
         for self.file in self.files:
+            # Check files for matching extension type
             if self.extension in self.file:
                 try:
                     move(self.file, self.path_destination)
@@ -129,14 +162,14 @@ class Mui():
                     self.files_copied += 1
 
     def backup(self):
-        backup_path, timestamp = join(
+        backup_path, timestamp = os.path.join(
             self.script_path, 'backup'), str(date.today())
         archive = f'{backup_path}_{timestamp}'
         print('Working.')
         sleep(0.5)
-        if not exists(backup_path):
+        if not os.path.exists(backup_path):
             try:
-                mkdir(backup_path)
+                os.mkdir(backup_path)
             except OSError as e:
                 print(f'Creation of the directory: backup failed. {e}')
             else:
@@ -165,7 +198,7 @@ class Mui():
         print(
             f'{_[0]} {self.folders_created} {_[1]} {self.files_copied} {_[2]}')
         self.draw_error()
-        print('- Feel free to close this window now.')
+        print('- Feel free to close this window.')
 
 
 if __name__ == '__main__':
