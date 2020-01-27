@@ -162,8 +162,15 @@ class Mui():
                     self.files_copied += 1
 
     def backup(self):
+        """
+        Optional backup, makes a zip backup up entire directory.
+
+        Use with caution, depending on amount of content in directory and
+        file sizes, the procedure could take a long time.
+        """
         backup_path, timestamp = os.path.join(
             self.script_path, 'backup'), str(date.today())
+        # Initialize backup folder name with  current timestamp.
         archive = f'{backup_path}_{timestamp}'
         print('Working.')
         sleep(0.5)
@@ -194,6 +201,11 @@ class Mui():
             print('Done.')
 
     def post_prompt(self):
+        """
+        Message to be displayed after operations.
+
+        Includes successful file transfer count and error count if valid.
+        """
         _ = ('Task Complete:', 'directories created and', 'files moved.')
         print(
             f'{_[0]} {self.folders_created} {_[1]} {self.files_copied} {_[2]}')
