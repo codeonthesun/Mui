@@ -115,7 +115,7 @@ class Mui():
         # Check each file for extension type.
         for self.extension in self.file_extensions:
             # Verify value for file-extension to make sure not == to None
-            if self.extension:
+            if os.path.isfile(self.extension):
                 self.path_destination = os.path.join(
                     self.script_path, self.extension)  # Initialize path dest.
                 self.make_folder()
