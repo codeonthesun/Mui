@@ -114,8 +114,8 @@ class Mui():
         self.files_copied, self.folders_created = 0, 0
         # Check each file for extension type.
         for self.extension in self.file_extensions:
-            # Verify value for file-extension to make sure not == to None
-            if os.path.isfile(self.extension):
+            # Verify source is file
+            if self.extension:
                 self.path_destination = os.path.join(
                     self.script_path, self.extension)  # Initialize path dest.
                 self.make_folder()
