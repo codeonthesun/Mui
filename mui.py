@@ -8,7 +8,7 @@ from time import sleep
 class Mui():
 
     def __init__(self):
-        self.script_path = os.path.dirname(os.path.realpath(__file__))
+        self.script_path = ''
         self.errors = []
         self.menu_state = False
 
@@ -28,17 +28,21 @@ class Mui():
 
     def directory_select(self):
         custom_path = [f for f in glob('/*')]
-        for i, directory in enumerate(custom_path):
-            print(f'   ○ {i} {directory}   ')
-        print('\n', 'Type "D" to use default directory: script location.', sep='')
-        print('Or manually select a directory to expand above.')
         while True:
+            for i, directory in enumerate(custom_path):
+                print(f'   ○ {i} {directory}   ')
+            print('\n', 'Type "D" to use default directory: script location.', sep='')
+            print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
             if self.user_choice in [str(i) for i in range(0, len(custom_path))]:
                 new_path = custom_path[int(self.user_choice)]
+                custom_path = [f for f in glob(new_path + '/*')]
                 self.script_path = os.path.abspath(new_path)
-                break
+                continue
             elif self.user_choice.startswith('d'):
+                self.script_path = os.path.dirname(os.path.realpath(__file__))
+                break
+            elif self.user_choice.startswith('y'):
                 break
             else:
                 print('Sorry, not an appropriate response. Try again.')
