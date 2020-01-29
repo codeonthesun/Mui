@@ -9,10 +9,26 @@ class Mui():
 
     def __init__(self):
         self.script_path = (os.path.dirname(os.path.realpath(__file__)))
+        self.custom_path = [f for f in glob('/*')]
         self.files = [f for f in glob(self.script_path + '/*')]
         self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
         self.errors = []
         self.menu_state = False
+
+    def directory_select(self):
+        for i, directory in enumerate(self.custom_path):
+            print('○', i, directory)
+        print('Please select a directory to expand and type "start" to begin')
+        self.draw_user_input('>')
+        _ = range(0, len(self.custom_path))
+        if int(self.user_choice) in _:
+            new_path = self.custom_path[int(self.user_choice)]
+            print(new_path, 'is selected, ', '\n')
+            self.custom_path = [f for f in glob(f'{new_path}/*')]
+            for files in self.custom_path:
+                print(files)
+            if self.user_choice == 'y':
+                pass
 
     def record_error(self, msg):
         """
@@ -60,6 +76,8 @@ class Mui():
 
     def main_loop(self):
         self.draw_files_in_dir()
+        # Commented out until method is finished.
+        #  self.directory_select()
         print('-' * 25, 'Type "Menu" for Help.', sep='\n')
         _ = ('Would you like to sort this directory into sub-folders? [Y/N]')
         while True:
@@ -215,4 +233,4 @@ class Mui():
 
 if __name__ == '__main__':
     m = Mui()
-    m.main_loop()
+    # m.main_loop()
