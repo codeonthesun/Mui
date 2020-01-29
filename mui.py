@@ -18,13 +18,13 @@ class Mui():
     def directory_select(self):
         for i, directory in enumerate(self.custom_path):
             print('○', i, directory)
-        print('Please select a directory to expand and type "start" to begin')
+        print('Please select a directory to expand.')
         self.draw_user_input('>')
         _ = range(0, len(self.custom_path))
         if int(self.user_choice) in _:
             new_path = self.custom_path[int(self.user_choice)]
             print(new_path, 'is selected, ', '\n')
-            self.custom_path = [f for f in glob(f'{new_path}/*')]
+            self.custom_path = [f for f in glob(new_path + '/*')]
             for files in self.custom_path:
                 print(files)
             if self.user_choice == 'y':
@@ -233,4 +233,4 @@ class Mui():
 
 if __name__ == '__main__':
     m = Mui()
-    # m.main_loop()
+    m.main_loop()
