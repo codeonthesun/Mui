@@ -27,16 +27,20 @@ class Mui():
         return {os.path.splitext(ext)[1] for ext in self.files}
 
     def directory_select(self):
-        custom_path = [f for f in glob('/*')]
+        current_path = [f for f in glob('/*') if os.path.isdir(f)]
         while True:
-            for i, directory in enumerate(custom_path):
-                print(f'   ○ {i} {directory}   ')
-            print('\n', 'Type "D" to use default directory: script location.', sep='')
+            for i, directory in enumerate(current_path):
+                if os.path.isfile(directory):
+                    print(f'  • {directory}   ')  # File differentiation
+                elif os.path.isdir(directory):
+                    print(f'  ○ {i} {directory}   ')  # Folder differentiation
+            print('\n', '(NOTE! "•" = File & "○" = Folder.)')
+            print('Type "D" to use default directory: script location.', sep='')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
-            if self.user_choice in [str(i) for i in range(0, len(custom_path))]:
-                new_path = custom_path[int(self.user_choice)]
-                custom_path = [f for f in glob(new_path + '/*')]
+            if self.user_choice in [str(i) for i in range(0, len(current_path))]:
+                new_path = current_path[int(self.user_choice)]
+                current_path = [f for f in glob(new_path + '/*')]
                 self.script_path = os.path.abspath(new_path)
                 continue
             elif self.user_choice.startswith('d'):
@@ -87,7 +91,6 @@ class Mui():
                 print(f'  ○ {self.file}   ')  # Folder differentiation
         print(
             '\n', f'{self.script_path} is selected, in directory: {dir_count}')
-        print('(NOTE! "•" = File & "○" = Folder.)')
 
     def main_loop(self):
         self.directory_select()
