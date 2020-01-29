@@ -8,27 +8,40 @@ from time import sleep
 class Mui():
 
     def __init__(self):
-        self.script_path = (os.path.dirname(os.path.realpath(__file__)))
-        self.custom_path = [f for f in glob('/*')]
-        self.files = [f for f in glob(self.script_path + '/*')]
-        self.file_extensions = {os.path.splitext(ext)[1] for ext in self.files}
+        self.script_path = os.path.dirname(os.path.realpath(__file__))
         self.errors = []
         self.menu_state = False
 
+    @property
+    def files(self):
+        """
+        Set file list, according to custom path or default.
+        """
+        return [f for f in glob(self.script_path + '/*')]
+
+    @property
+    def file_extensions(self):
+        """
+        Take from file list all unique file extension types to set.
+        """
+        return {os.path.splitext(ext)[1] for ext in self.files}
+
     def directory_select(self):
-        for i, directory in enumerate(self.custom_path):
-            print('○', i, directory)
-        print('Please select a directory to expand.')
-        self.draw_user_input('>')
-        _ = range(0, len(self.custom_path))
-        if int(self.user_choice) in _:
-            new_path = self.custom_path[int(self.user_choice)]
-            print(new_path, 'is selected, ', '\n')
-            self.custom_path = [f for f in glob(new_path + '/*')]
-            for files in self.custom_path:
-                print(files)
-            if self.user_choice == 'y':
-                pass
+        custom_path = [f for f in glob('/*')]
+        for i, directory in enumerate(custom_path):
+            print(f'   ○ {i} {directory}   ')
+        print('\n', 'Type "D" to use default directory: script location.', sep='')
+        print('Or manually select a directory to expand above.')
+        while True:
+            self.draw_user_input('>')
+            if self.user_choice in [str(i) for i in range(0, len(custom_path))]:
+                new_path = custom_path[int(self.user_choice)]
+                self.script_path = os.path.abspath(new_path)
+                break
+            elif self.user_choice.startswith('d'):
+                break
+            else:
+                print('Sorry, not an appropriate response. Try again.')
 
     def record_error(self, msg):
         """
@@ -63,21 +76,18 @@ class Mui():
 
         Displaying whether or not they are file or folder.
         """
-        directory = (
-            '⌂ Directory Contents:',
-            '(NOTE! Under main directory. "•" = File & "○" = Folder.)')
         for dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
                 print(f'  • {self.file}   ')  # File differentiation
             elif os.path.isdir(self.file):
                 print(f'  ○ {self.file}   ')  # Folder differentiation
-        print('\n', self.script_path, '\n'.join(directory))
-        print('In Directory:', dir_count)
+        print(
+            '\n', f'{self.script_path} is selected, in directory: {dir_count}')
+        print('(NOTE! "•" = File & "○" = Folder.)')
 
     def main_loop(self):
+        self.directory_select()
         self.draw_files_in_dir()
-        # Commented out until method is finished.
-        #  self.directory_select()
         print('-' * 25, 'Type "Menu" for Help.', sep='\n')
         _ = ('Would you like to sort this directory into sub-folders? [Y/N]')
         while True:
