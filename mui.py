@@ -30,9 +30,7 @@ class Mui():
         current_path = [f for f in glob('/*') if os.path.isdir(f)]
         while True:
             for i, directory in enumerate(current_path):
-                if os.path.isfile(directory):
-                    print(f'  • {directory}   ')  # File differentiation
-                elif os.path.isdir(directory):
+                if os.path.isdir(directory):
                     print(f'  ○ {i} {directory}   ')  # Folder differentiation
             print('\n', '(NOTE! "•" = File & "○" = Folder.)')
             print('Type "D" to use default directory: script location.', sep='')
@@ -40,7 +38,8 @@ class Mui():
             self.draw_user_input('>')
             if self.user_choice in [str(i) for i in range(0, len(current_path))]:
                 new_path = current_path[int(self.user_choice)]
-                current_path = [f for f in glob(new_path + '/*')]
+                current_path = [f for f in glob(
+                    new_path + '/*') if os.path.isdir(f)]
                 self.script_path = os.path.abspath(new_path)
                 continue
             elif self.user_choice.startswith('d'):
