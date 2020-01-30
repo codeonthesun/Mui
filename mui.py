@@ -33,9 +33,12 @@ class Mui():
             for i, directory in enumerate(current_path, start=1):
                 print(f'  ○ {i} {directory}   ')
             print('\n', f'{self.path} is selected, folders in directory: {i}')
-            print('\n', '(NOTE! Displaying only directories, to see files you must first confirm a directory.)', sep='')
-            print('-' * 25, 'Type "D" to use default directory: script location.', sep='\n')
-            print('Or manually select a directory to expand above & confirm with "Y".')
+            print('\n', '(NOTE! Currently only displaying directories.')
+            print('To see files you must first confirm a directory.)')
+            print('-' * 25)
+            print('Type "D" to use default directory: script location.')
+            print('Or manually select a directory to expand above ', end='')
+            print('confirm with "Y".')
             self.draw_user_input('>')
             # Convert range list of sub-folders index to strings.
             index = [str(i) for i in range(1, len(current_path) + 1)]
@@ -96,7 +99,8 @@ class Mui():
     def main_loop(self):
         self.directory_select()
         self.draw_files_in_dir()
-        print('-' * 25, 'Type "Menu" for Help.', sep='\n')
+        print('-' * 25)
+        print('Type "Menu" for Help.')
         _ = ('Would you like to sort this directory into sub-folders? [Y/N]')
         while True:
             self.draw_user_input(_)
