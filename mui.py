@@ -29,6 +29,7 @@ class Mui():
 
     def directory_select(self):
         current_path = [f for f in glob('/*') if os.path.isdir(f)]
+        _ = 'Or manually select a directory to expand above & confirm with "Y"'
         while True:
             for i, directory in enumerate(current_path, start=1):
                 print(f'  ○ {i} {directory}   ')
@@ -37,9 +38,7 @@ class Mui():
             print('To see files you must first confirm a directory.)')
             print('-' * 25)
             print('Type "D" to use default directory: script location.')
-            print('Or manually select a directory to expand above ', end='')
-            print('confirm with "Y".')
-            self.draw_user_input('>')
+            self.draw_user_input(_)
             # Convert range list of sub-folders index to strings.
             index = [str(i) for i in range(1, len(current_path) + 1)]
             if self.user_choice in index:
@@ -52,7 +51,7 @@ class Mui():
                 # Use default path location of where the script is being ran.
                 self.path = os.path.dirname(os.path.realpath(__file__))
                 break
-            elif self.user_choice.startswith('y'):
+            elif self.user_choice.startswith('y') and self.dir_count != 0:
                 break
             elif self.user_choice.startswith('y') and self.dir_count == 0:
                 # Prevent selection of directory that has no files.
@@ -91,10 +90,11 @@ class Mui():
         """
         Count and display files in current directory, starting from 1.
         """
+        _ = ('is selected', 'files in directory:')
         for self.dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
                 print(f'  • {self.file}   ')
-        print('\n', f'{self.path} is selected, files in directory: {self.dir_count}')
+        print('\n', f'{self.path} {_[0]}, {_[1]} {self.dir_count}')
 
     def main_loop(self):
         self.directory_select()
