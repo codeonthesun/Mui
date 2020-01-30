@@ -17,7 +17,7 @@ class Mui():
         """
         Set file list, according to custom path or default.
         """
-        return [f for f in glob(self.script_path + '/*')]
+        return [f for f in glob(self.script_path + '/*') if os.path.isfile(f)]
 
     @property
     def file_extensions(self):
@@ -29,10 +29,10 @@ class Mui():
     def directory_select(self):
         current_path = [f for f in glob('/*') if os.path.isdir(f)]
         while True:
-            for i, directory in enumerate(current_path):
+            for i, directory in enumerate(current_path, start=1):
                 if os.path.isdir(directory):
-                    print(f'  ○ {i} {directory}   ')  # Folder differentiation
-            print('\n', '(NOTE! "○" = Folder.)')
+                    print(f'  ○ {i} {directory}   ')
+            print('\n', '(NOTE! "○" = Folder. To see files, you must first select a folder.)')
             print('Type "D" to use default directory: script location.', sep='')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
@@ -85,11 +85,8 @@ class Mui():
         """
         for dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
-                print(f'  • {self.file}   ')  # File differentiation
-            elif os.path.isdir(self.file):
-                print(f'  ○ {self.file}   ')  # Folder differentiation
-        print(
-            '\n', f'{self.script_path} is selected, in directory: {dir_count}')
+                print(f'  • {self.file}   ')
+        print('\n', f'{self.script_path} is selected, files in directory: {dir_count}')
         print('\n', '(NOTE! "•" = File & "○" = Folder.)')
 
     def main_loop(self):
@@ -172,7 +169,7 @@ class Mui():
                 print(
                     f'Creation of the directory: {self.extension} failed. {e}')
             else:
-                print(f'Successfully created the directory: {self.extension}.')
+                print(f'Successfully created the directory: {self.extension}')
                 self.folders_created += 1
         else:
             print('Directory already exists.')
