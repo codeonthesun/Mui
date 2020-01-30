@@ -8,9 +8,10 @@ from time import sleep
 class Mui():
 
     def __init__(self):
-        self.script_path = ''
+        self.script_path = '/'
         self.errors = []
         self.menu_state = False
+        self.dir_count = 0
 
     @property
     def files(self):
@@ -30,14 +31,14 @@ class Mui():
         current_path = [f for f in glob('/*') if os.path.isdir(f)]
         while True:
             for i, directory in enumerate(current_path, start=1):
-                if os.path.isdir(directory):
-                    print(f'  ○ {i} {directory}   ')
-            print('\n', '(NOTE! "○" = Folder. To see files, you must first select a folder.)')
-            print('Type "D" to use default directory: script location.', sep='')
+                print(f'  ○ {i} {directory}   ')
+            print('\n', f'{self.script_path} is selected, in directory: {i}')
+            print('\n', '(NOTE! "○" = Folder. To see files, you must first select a folder.)', sep='')
+            print('-' * 25, 'Type "D" to use default directory: script location.', sep='\n')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
             if self.user_choice in [str(i) for i in range(0, len(current_path))]:
-                new_path = current_path[int(self.user_choice)]
+                new_path = current_path[int(self.user_choice) - 1]
                 current_path = [f for f in glob(
                     new_path + '/*') if os.path.isdir(f)]
                 self.script_path = os.path.abspath(new_path)
@@ -45,8 +46,10 @@ class Mui():
             elif self.user_choice.startswith('d'):
                 self.script_path = os.path.dirname(os.path.realpath(__file__))
                 break
-            elif self.user_choice.startswith('y'):
+            elif self.user_choice.startswith('y') and self.dir_count != 0:
                 break
+            elif self.user_choice.startswith('y') and self.dir_count == 0:
+                print('Sorry, this directory has no files to sort. Try again.')
             else:
                 print('Sorry, not an appropriate response. Try again.')
 
@@ -79,15 +82,13 @@ class Mui():
 
     def draw_files_in_dir(self):
         """
-        Count files in current directory, starting from 1.
-
-        Displaying whether or not they are file or folder.
+        Count and display files in current directory, starting from 1.
         """
-        for dir_count, self.file in enumerate(self.files, start=1):
+        for self.dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
                 print(f'  • {self.file}   ')
-        print('\n', f'{self.script_path} is selected, files in directory: {dir_count}')
-        print('\n', '(NOTE! "•" = File & "○" = Folder.)')
+        print('\n', f'{self.script_path} is selected, in directory: {self.dir_count}')
+        print('\n', '(NOTE! "•" = File)')
 
     def main_loop(self):
         self.directory_select()
