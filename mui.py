@@ -32,12 +32,12 @@ class Mui():
         while True:
             for i, directory in enumerate(current_path, start=1):
                 print(f'  ○ {i} {directory}   ')
-            print('\n', f'{self.script_path} is selected, in directory: {i}')
-            print('\n', '(NOTE! "○" = Folder. To see files, you must first select a folder.)', sep='')
+            print('\n', f'{self.script_path} is selected, folders in directory: {i}')
+            print('\n', '(NOTE! Displaying only directories, to see files you must first confirm a directory.)', sep='')
             print('-' * 25, 'Type "D" to use default directory: script location.', sep='\n')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
-            if self.user_choice in [str(i) for i in range(0, len(current_path))]:
+            if self.user_choice in [str(i) for i in range(1, len(current_path) + 1)]:
                 new_path = current_path[int(self.user_choice) - 1]
                 current_path = [f for f in glob(
                     new_path + '/*') if os.path.isdir(f)]
@@ -46,7 +46,7 @@ class Mui():
             elif self.user_choice.startswith('d'):
                 self.script_path = os.path.dirname(os.path.realpath(__file__))
                 break
-            elif self.user_choice.startswith('y') and self.dir_count != 0:
+            elif self.user_choice.startswith('y'):
                 break
             elif self.user_choice.startswith('y') and self.dir_count == 0:
                 print('Sorry, this directory has no files to sort. Try again.')
@@ -87,8 +87,7 @@ class Mui():
         for self.dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
                 print(f'  • {self.file}   ')
-        print('\n', f'{self.script_path} is selected, in directory: {self.dir_count}')
-        print('\n', '(NOTE! "•" = File)')
+        print('\n', f'{self.script_path} is selected, files in directory: {self.dir_count}')
 
     def main_loop(self):
         self.directory_select()
@@ -104,7 +103,7 @@ class Mui():
                 break
             elif self.user_choice.startswith('n'):
                 print('Good-bye!')
-                quit()
+                exit()
             elif 'menu' in self.user_choice:
                 self.menu_state = True
                 self.draw_help_menu()
