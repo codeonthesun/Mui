@@ -8,7 +8,7 @@ from time import sleep
 class Mui():
 
     def __init__(self):
-        self.script_path = '/'
+        self.path = '/'
         self.errors = []
         self.menu_state = False
         self.dir_count = 0
@@ -18,7 +18,7 @@ class Mui():
         """
         Set file list, according to custom path or default.
         """
-        return [f for f in glob(self.script_path + '/*') if os.path.isfile(f)]
+        return [f for f in glob(self.path + '/*') if os.path.isfile(f)]
 
     @property
     def file_extensions(self):
@@ -32,23 +32,27 @@ class Mui():
         while True:
             for i, directory in enumerate(current_path, start=1):
                 print(f'  ○ {i} {directory}   ')
-            print('\n', f'{self.script_path} is selected, folders in directory: {i}')
+            print('\n', f'{self.path} is selected, folders in directory: {i}')
             print('\n', '(NOTE! Displaying only directories, to see files you must first confirm a directory.)', sep='')
             print('-' * 25, 'Type "D" to use default directory: script location.', sep='\n')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
-            if self.user_choice in [str(i) for i in range(1, len(current_path) + 1)]:
+            # Convert range list of sub-folders index to strings.
+            index = [str(i) for i in range(1, len(current_path) + 1)]
+            if self.user_choice in index:
                 new_path = current_path[int(self.user_choice) - 1]
                 current_path = [f for f in glob(
                     new_path + '/*') if os.path.isdir(f)]
-                self.script_path = os.path.abspath(new_path)
+                self.path = os.path.abspath(new_path)
                 continue
             elif self.user_choice.startswith('d'):
-                self.script_path = os.path.dirname(os.path.realpath(__file__))
+                # Use default path location of where the script is being ran.
+                self.path = os.path.dirname(os.path.realpath(__file__))
                 break
             elif self.user_choice.startswith('y'):
                 break
             elif self.user_choice.startswith('y') and self.dir_count == 0:
+                # Prevent selection of directory that has no files.
                 print('Sorry, this directory has no files to sort. Try again.')
             else:
                 print('Sorry, not an appropriate response. Try again.')
@@ -87,7 +91,7 @@ class Mui():
         for self.dir_count, self.file in enumerate(self.files, start=1):
             if os.path.isfile(self.file):
                 print(f'  • {self.file}   ')
-        print('\n', f'{self.script_path} is selected, files in directory: {self.dir_count}')
+        print('\n', f'{self.path} is selected, files in directory: {self.dir_count}')
 
     def main_loop(self):
         self.directory_select()
@@ -149,7 +153,7 @@ class Mui():
             # Verify source is file
             if self.extension:
                 self.path_destination = os.path.join(
-                    self.script_path, self.extension)  # Initialize path dest.
+                    self.path, self.extension)  # Initialize path dest.
                 self.make_folder()
                 sleep(0.5)
                 self.copy_file()
@@ -201,7 +205,7 @@ class Mui():
         file sizes, the procedure could take a long time.
         """
         backup_path, timestamp = os.path.join(
-            self.script_path, 'backup'), str(date.today())
+            self.path, 'backup'), str(date.today())
         # Initialize backup folder name with  current timestamp.
         archive = f'{backup_path}_{timestamp}'
         print('Working.')
@@ -218,7 +222,7 @@ class Mui():
             print('Directory already exists.')
         try:
             make_archive(
-                base_name=archive, format='zip', root_dir=self.script_path)
+                base_name=archive, format='zip', root_dir=self.path)
         except Exception as e:
             print(f'Error: {e}')
         else:
