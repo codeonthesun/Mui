@@ -32,7 +32,7 @@ class Mui():
             for i, directory in enumerate(current_path):
                 if os.path.isdir(directory):
                     print(f'  ○ {i} {directory}   ')  # Folder differentiation
-            print('\n', '(NOTE! "•" = File & "○" = Folder.)')
+            print('\n', '(NOTE! "○" = Folder.)')
             print('Type "D" to use default directory: script location.', sep='')
             print('Or manually select a directory to expand above & confirm with "Y".')
             self.draw_user_input('>')
@@ -90,6 +90,7 @@ class Mui():
                 print(f'  ○ {self.file}   ')  # Folder differentiation
         print(
             '\n', f'{self.script_path} is selected, in directory: {dir_count}')
+        print('\n', '(NOTE! "•" = File & "○" = Folder.)')
 
     def main_loop(self):
         self.directory_select()
