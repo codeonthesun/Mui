@@ -11,7 +11,6 @@ class Mui():
         self.path = '/'
         self.errors = []
         self.menu_state = False
-        self.dir_count = 0
 
     @property
     def files(self):
@@ -33,7 +32,7 @@ class Mui():
         while True:
             for i, directory in enumerate(current_path, start=1):
                 print(f'  ○ {i} {directory}   ')
-            print('\n', f'{self.path} is selected, folders in directory: {i}')
+            print('\n', f'{self.path} is selected,')
             print('\n', '(NOTE! Currently only displaying directories.')
             print('To see files you must first confirm a directory.)')
             print('-' * 25)
@@ -51,11 +50,8 @@ class Mui():
                 # Use default path location of where the script is being ran.
                 self.path = os.path.dirname(os.path.realpath(__file__))
                 break
-            elif self.user_choice.startswith('y') and self.dir_count != 0:
+            elif self.user_choice.startswith('y'):
                 break
-            elif self.user_choice.startswith('y') and self.dir_count == 0:
-                # Prevent selection of directory that has no files.
-                print('Sorry, this directory has no files to sort. Try again.')
             else:
                 print('Sorry, not an appropriate response. Try again.')
 
