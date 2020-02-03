@@ -35,4 +35,6 @@ Custom path setup (dirty method, not rec.)
 
 ### Demo
 
+Using fast method, default path.
+
 <img src="https://i.imgur.com/Lj09NIu.gif">
