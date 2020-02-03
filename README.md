@@ -32,3 +32,7 @@ Custom path setup (dirty method, not rec.)
   (Now you will see all the files in the directory along with a count)
 
 - Finally, type "Y" and hit [ enter ] once to confirm, and again to proceed.
+
+### Demo
+
+<img src="https://i.imgur.com/Lj09NIu.gif">
