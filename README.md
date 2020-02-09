@@ -38,3 +38,5 @@ Custom path setup (dirty method, not rec.)
 Using fast method, default path.
 
 <img src='https://i.postimg.cc/MG29QrQ5/Kapture-2020-02-09-at-10-57-40.gif'>
+OUTCOME:
+<img src='https://i.postimg.cc/g25s3cx3/1.png'>
