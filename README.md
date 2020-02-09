@@ -37,4 +37,4 @@ Custom path setup (dirty method, not rec.)
 
 Using fast method, default path.
 
-TODO: Update gifs.
+<img src='https://i.postimg.cc/MG29QrQ5/Kapture-2020-02-09-at-10-57-40.gif'>
